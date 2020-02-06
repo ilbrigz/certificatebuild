@@ -70,12 +70,12 @@ export default function App() {
       top: 0,
       fontFamily: 'Roboto',
     });
-    var text2 = new fabric.Text('m', {
+    var text2 = new fabric.IText('m', {
       left: 0,
       top: 0,
       fontFamily: 'Roboto',
     });
-    var text3 = new fabric.Text('m', {
+    var text3 = new fabric.IText('m', {
       left: 100,
       top: 100,
       fontFamily: 'Roboto',
@@ -113,7 +113,8 @@ export default function App() {
 
     for (let i = 0; i < jsonCanvas.objects.length; i++) {
       if (
-        jsonCanvas.objects[i].type === 'text' &&
+        (jsonCanvas.objects[i].type === 'text' ||
+          jsonCanvas.objects[i].type === 'i-text') &&
         jsonCanvas.objects[i].text !== '#name#'
       ) {
         singlePageObjects.push({
@@ -198,6 +199,7 @@ export default function App() {
     console.log(activeEl);
     if (activeEl && activeEl.type) {
       activeEl.set({ left: canvas.getWidth() / 2 - activeEl.width / 2 });
+      activeEl.setCoords();
       canvas.requestRenderAll();
     }
   };
