@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { fabric } from 'fabric';
 import pdfMake from 'pdfmake';
-import vfs from './vfs_fonts.js';
 import './App.css';
 import { readAndCompressImage } from 'browser-image-resizer';
 import cloneDeep from 'clone-deep';
 import jexcel from 'jexcel';
 import ReactTooltip from 'react-tooltip';
+import pdfFonts from "pdfmake/build/vfs_fonts";
+
 import {
   FaAlignLeft,
   FaAlignRight,
@@ -30,6 +31,8 @@ import {
 } from './utilty/pdf_helper';
 
 import { toDataURL } from './utilty/helper';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default function App() {
   const canvasRef = useRef(null);
@@ -132,7 +135,7 @@ export default function App() {
       mtr: false,
     });
 
-    fabric.Image.fromURL('/certificate2.jpg', function(img) {
+    fabric.Image.fromURL('/certificate2.jpg', function (img) {
       console.log(img);
       const image = fabricRef.current.setBackgroundImage(
         img,
@@ -168,7 +171,7 @@ export default function App() {
     const jsonCanvas = fabricRef.current.toObject();
     const headers = jexcelRef.current.getHeaders().split(',');
     const filteredData = jexcelRef.current.getData().filter((a) =>
-      a.some(function(x) {
+      a.some(function (x) {
         return x;
       })
     );
@@ -242,6 +245,7 @@ export default function App() {
           ...pagesContent,
           pageBackground,
           {
+            style: { bold: true, italic: true },
             stack: [
               ...singlePageObjects,
               ...loopThroughItems(dynamicObjects, filteredData[i]),
@@ -253,13 +257,23 @@ export default function App() {
       }
     }
 
+    pdfMake.fonts = {
+      Roboto: {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf'
+      }
+    };
+
     const docDefinition = cloneDeep({
       pageOrientation: 'landscape',
       pageMargins: 0,
       content: pagesContent,
     });
 
-    pdfMake.createPdf(docDefinition, null, null, vfs).open();
+    // pdfMake.createPdf(docDefinition, null, null, vfs).open();
+    pdfMake.createPdf(docDefinition).open();
 
     function loopThroughItems(dynamicObjects, rowData) {
       const arrayObj = [];
@@ -340,11 +354,11 @@ export default function App() {
 
     const readerobj = new FileReader();
 
-    readerobj.onload = function() {
+    readerobj.onload = function () {
       var imgElement = document.createElement('img');
       imgElement.src = readerobj.result;
 
-      imgElement.onload = function() {
+      imgElement.onload = function () {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,
