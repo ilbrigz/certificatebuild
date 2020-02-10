@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/certificatebuild/static/css/main.3c7f6824.chunk.css",
+    "main.js": "/certificatebuild/static/js/main.b309bcaf.chunk.js",
+    "main.js.map": "/certificatebuild/static/js/main.b309bcaf.chunk.js.map",
+    "runtime-main.js": "/certificatebuild/static/js/runtime-main.151a4451.js",
+    "runtime-main.js.map": "/certificatebuild/static/js/runtime-main.151a4451.js.map",
+    "static/css/2.47471943.chunk.css": "/certificatebuild/static/css/2.47471943.chunk.css",
+    "static/js/2.df21e0cc.chunk.js": "/certificatebuild/static/js/2.df21e0cc.chunk.js",
+    "static/js/2.df21e0cc.chunk.js.map": "/certificatebuild/static/js/2.df21e0cc.chunk.js.map",
+    "index.html": "/certificatebuild/index.html",
+    "precache-manifest.b821da987e6d9f555d756ed5cb8c6b70.js": "/certificatebuild/precache-manifest.b821da987e6d9f555d756ed5cb8c6b70.js",
+    "service-worker.js": "/certificatebuild/service-worker.js",
+    "static/css/2.47471943.chunk.css.map": "/certificatebuild/static/css/2.47471943.chunk.css.map",
+    "static/css/main.3c7f6824.chunk.css.map": "/certificatebuild/static/css/main.3c7f6824.chunk.css.map",
+    "static/js/2.df21e0cc.chunk.js.LICENSE.txt": "/certificatebuild/static/js/2.df21e0cc.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.151a4451.js",
+    "static/css/2.47471943.chunk.css",
+    "static/js/2.df21e0cc.chunk.js",
+    "static/css/main.3c7f6824.chunk.css",
+    "static/js/main.b309bcaf.chunk.js"
+  ]
+}
