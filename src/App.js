@@ -156,7 +156,7 @@ export default function App() {
   const quality = 1;
 
   const generatePdf = async () => {
-    const image = await toDataURL('http://localhost:3000/certificate2.jpg', {
+    const image = await toDataURL('/certificate2.jpg', {
       maxWidth: pageWidth,
       maxHeight: pageHeight,
       quality,
@@ -245,7 +245,6 @@ export default function App() {
           ...pagesContent,
           pageBackground,
           {
-            style: { bold: true, italic: true },
             stack: [
               ...singlePageObjects,
               ...loopThroughItems(dynamicObjects, filteredData[i]),
