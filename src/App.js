@@ -6,6 +6,15 @@ import './App.css';
 import { readAndCompressImage } from 'browser-image-resizer';
 import cloneDeep from 'clone-deep';
 import jexcel from 'jexcel';
+import ReactTooltip from 'react-tooltip';
+import {
+  FaAlignLeft,
+  FaAlignRight,
+  FaAlignCenter,
+  FaSortNumericUp,
+  FaSortNumericDown,
+} from 'react-icons/fa';
+import { FiMoreVertical } from 'react-icons/fi';
 
 import Canvas from './components/Canvas';
 
@@ -38,13 +47,7 @@ export default function App() {
       tableWidth: '842px',
       tableHeight: '500px',
       minDimensions: [2, 5],
-      onchange: (instance, cell, x, y, value) => {
-        console.log(instance);
-        console.log(cell);
-        console.log(x);
-        console.log(y);
-        console.log(value);
-      },
+      columns: [{ title: 'Column 1' }, { title: 'Column 2' }],
     });
   }, []);
 
@@ -83,7 +86,7 @@ export default function App() {
 
     // console.log(canvas.forEachObject());
 
-    var text = new fabric.Text('A', {
+    var text = new fabric.Text('Column 1', {
       left: 0,
       fontSize: 30,
       textAlign: 'center',
@@ -91,7 +94,7 @@ export default function App() {
       top: 0,
       fontFamily: 'Roboto',
     });
-    var text2 = new fabric.Text('B', {
+    var text2 = new fabric.Text('Column 2', {
       left: 0,
       fontSize: 30,
       textAlign: 'center',
@@ -390,21 +393,41 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex' }}>
+      <ReactTooltip />
       <div>
         <Canvas ref={canvasRef} />
         <div>
-          <button onClick={() => onAlignText('left')}>Align left Text</button>
-          <button onClick={() => onAlignText('center')}>
-            align Center Text
+          <button
+            data-tip="Text Align Left"
+            onClick={() => onAlignText('left')}
+          >
+            <FaAlignLeft />
           </button>
-          <button onClick={() => onAlignText('right')}>Align right text</button>
+          <button
+            data-tip="Text Align Center"
+            onClick={() => onAlignText('center')}
+          >
+            <FaAlignCenter />
+          </button>
+          <button
+            data-tip="Text Align Right"
+            onClick={() => onAlignText('right')}
+          >
+            <FaAlignRight />
+          </button>
         </div>
         <div>
           <button onClick={logCanvas}>LOG JSON</button>
           <button onClick={generatePdf}>download</button>
-          <button onClick={alignCenter}>center of canvas</button>
-          <button onClick={sendForward}>Send Forwrard</button>
-          <button onClick={sendBackward}>Send sendBackwards</button>
+          <button data-tip="Center Horizontally" onClick={alignCenter}>
+            <FiMoreVertical />
+          </button>
+          <button data-tip="Move Up" onClick={sendForward}>
+            <FaSortNumericDown />
+          </button>
+          <button data-tip="Move Down" onClick={sendBackward}>
+            <FaSortNumericUp />
+          </button>
           <button onClick={stateChange}>state change</button>
           <button onClick={onRemove}>X</button>
         </div>
