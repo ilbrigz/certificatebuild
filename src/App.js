@@ -5,6 +5,7 @@ import vfs from './vfs_fonts.js';
 import './App.css';
 import { readAndCompressImage } from 'browser-image-resizer';
 import cloneDeep from 'clone-deep'
+import jexcel from 'jexcel'
 
 
 import Canvas from './components/Canvas'
@@ -24,9 +25,30 @@ import { toDataURL } from './utilty/helper'
 
 export default function App() {
   const canvasRef = useRef(null);
+  const divRef = useRef(null);
+  const jexcelRef = useRef(null);
   const fabricRef = useRef(null)
   const [fontSize, setFontSize] = useState(16)
   const [count, setCount] = useState(16)
+
+  useEffect(() => {
+    jexcelRef.current = jexcel(
+      divRef.current, {
+      minDimensions: [10, 20],
+      defaultColWidth: 100,
+      tableOverflow: true,
+      tableWidth: "842px",
+      tableHeight: "500px",
+      minDimensions: [2, 2],
+      onchange: ((instance, cell, x, y, value) => {
+        console.log(instance)
+        console.log(cell)
+        console.log(x)
+        console.log(y)
+        console.log(value)
+      })
+    });
+  }, [])
 
   useEffect(() => {
     fabricRef.current = new fabric.Canvas(canvasRef.current, {
@@ -65,7 +87,7 @@ export default function App() {
 
     // console.log(canvas.forEachObject());
 
-    var text = new fabric.Text('#name#', {
+    var text = new fabric.Text('A', {
       left: 0,
       fontSize: 30,
       textAlign: 'center',
@@ -73,17 +95,19 @@ export default function App() {
       top: 0,
       fontFamily: 'Roboto',
     });
-    var text2 = new fabric.IText('m', {
+    var text2 = new fabric.Text('B', {
       left: 0,
+      fontSize: 30,
+      textAlign: 'center',
+      hasRotatingPoint: false,
       top: 0,
       fontFamily: 'Roboto',
     });
     var text3 = new fabric.IText('m', {
-      left: 100,
-      top: 100,
+      left: 0,
+      top: 0,
       fontFamily: 'Roboto',
     });
-
     var t1 = new fabric.Textbox('Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.', {
       width: 200,
       top: 400,
@@ -132,263 +156,66 @@ export default function App() {
     };
 
     const jsonCanvas = fabricRef.current.toObject();
-
-    const names = [
-      {
-        name:
-          'Lor',
-      },
-      { name: 'john' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-      { name: 'rex' },
-    ];
+    const headers = jexcelRef.current.getHeaders().split(',')
+    const filteredData = jexcelRef.current.getData().filter(a => a.some(function (x) { return x }));
 
     const singlePageObjects = [];
     const dynamicObjects = [];
-    const imageObjects = []
 
-    for (let i = 0; i < jsonCanvas.objects.length; i++) {
+    const { objects } = jsonCanvas;
+
+    for (let i = 0; i < objects.length; i++) {
       if (
-        (jsonCanvas.objects[i].type === 'text' ||
-          jsonCanvas.objects[i].type === 'i-text') &&
-        jsonCanvas.objects[i].text !== '#name#'
+        objects[i].type === 'i-text'
       ) {
         singlePageObjects.push({
-          text: jsonCanvas.objects[i].text,
+          text: objects[i].text,
           absolutePosition: {
-            x: jsonCanvas.objects[i].left,
-            y: jsonCanvas.objects[i].top - 2,
+            x: objects[i].left,
+            y: objects[i].top - 2,
           },
-          fontSize: jsonCanvas.objects[i].fontSize,
-          alignment: jsonCanvas.objects[i].textAlign,
+          fontSize: objects[i].fontSize,
+          alignment: objects[i].textAlign,
         });
 
       }
       if (
-        jsonCanvas.objects[i].type === 'image'
-        &&
-        jsonCanvas.objects[i].text !== '#name#'
+        objects[i].type === 'image'
       ) {
         singlePageObjects.push({
-          image: jsonCanvas.objects[i].src,
+          image: objects[i].src,
           absolutePosition: {
-            x: jsonCanvas.objects[i].left,
-            y: jsonCanvas.objects[i].top - 2,
+            x: objects[i].left,
+            y: objects[i].top - 2,
           },
-          width: jsonCanvas.objects[i].width * jsonCanvas.objects[i].scaleX,
-          height: jsonCanvas.objects[i].height * jsonCanvas.objects[i].scaleY,
+          width: objects[i].width * objects[i].scaleX,
+          height: objects[i].height * objects[i].scaleY,
         });
 
       }
 
-      if (jsonCanvas.objects[i].type === 'textbox' &&
-        jsonCanvas.objects[i].text !== '#name#') {
+      if (objects[i].type === 'textbox') {
         singlePageObjects.push({
-          text: jsonCanvas.objects[i].text,
+          text: objects[i].text,
           relativePosition: {
-            x: jsonCanvas.objects[i].left,
-            y: jsonCanvas.objects[i].top - 2,
+            x: objects[i].left,
+            y: objects[i].top - 2,
           },
-          fontSize: jsonCanvas.objects[i].fontSize,
-          alignment: jsonCanvas.objects[i].textAlign,
-          margin: textboxMargin(jsonCanvas.objects[i].left,
-            jsonCanvas.objects[i].width,
+          fontSize: objects[i].fontSize,
+          alignment: objects[i].textAlign,
+          margin: textboxMargin(objects[i].left,
+            objects[i].width,
             842),
-
         });
       }
 
-      if (
-        jsonCanvas.objects[i].type === 'text' &&
-        jsonCanvas.objects[i].text === '#name#'
-      ) {
+      if (objects[i].type === 'text') {
         dynamicObjects.push({
-          text: jsonCanvas.objects[i].text,
-          ...(jsonCanvas.objects[i].textAlign === 'center' ?
-            centeredTextProperties(jsonCanvas.objects[i], pageWidth) :
-            leftOrRightAlignedTextProperties(jsonCanvas.objects[i], pageWidth)),
-          fontSize: jsonCanvas.objects[i].fontSize,
+          text: headers.indexOf(objects[i].text),
+          ...(objects[i].textAlign === 'center' ?
+            centeredTextProperties(objects[i], pageWidth) :
+            leftOrRightAlignedTextProperties(objects[i], pageWidth)),
+          fontSize: objects[i].fontSize,
 
         });
       }
@@ -396,17 +223,18 @@ export default function App() {
 
     let pagesContent = [];
 
-    for (let i = 0; i < names.length; i++) {
+
+    for (let i = 0; i < filteredData.length; i++) {
       pagesContent = [
         ...pagesContent,
         pageBackground,
         {
           stack: [
             ...singlePageObjects,
-            { ...dynamicObjects[0], text: names[i].name },
+            ...(loopThroughItems(dynamicObjects, filteredData[i])),
           ],
           unbreakable: true,
-          ...(i !== names.length - 1 && { pageBreak: 'after' }),
+          ...(i !== filteredData.length - 1 && { pageBreak: 'after' }),
         },
       ];
     }
@@ -418,6 +246,18 @@ export default function App() {
     })
 
     pdfMake.createPdf(docDefinition, null, null, vfs).open();
+
+    function loopThroughItems(dynamicObjects, rowData) {
+      const arrayObj = [];
+      for (let i = 0; i < dynamicObjects.length; i++) {
+        arrayObj.push({
+          ...dynamicObjects[i],
+          text: rowData[dynamicObjects[i].text]
+        })
+      }
+      console.log(arrayObj)
+      return arrayObj
+    }
   };
 
   const alignCenter = () => {
@@ -543,25 +383,34 @@ export default function App() {
 
   return (
     <div>
-      <p>{count}</p>
-      <Canvas ref={canvasRef} />
       <div>
-        <button onClick={() => onAlignText('left')}>Align left Text</button>
-        <button onClick={() => onAlignText('center')}>align Center Text</button>
-        <button onClick={() => onAlignText('right')}>Align right text</button>
-      </div>
-      <div>
-        <button onClick={logCanvas}>LOG JSON</button>
-        <button onClick={generatePdf}>download</button>
-        <button onClick={alignCenter}>center of canvas</button>
-        <button onClick={sendForward}>Send Forwrard</button>
-        <button onClick={sendBackward}>Send sendBackwards</button>
-        <button onClick={stateChange}>state change</button>
-        <button onClick={onRemove}>X</button>
-      </div>
+        <p>{count}</p>
+        <Canvas ref={canvasRef} />
+        <div>
+          <button onClick={() => onAlignText('left')}>Align left Text</button>
+          <button onClick={() => onAlignText('center')}>align Center Text</button>
+          <button onClick={() => onAlignText('right')}>Align right text</button>
+        </div>
+        <div>
+          <button onClick={logCanvas}>LOG JSON</button>
+          <button onClick={generatePdf}>download</button>
+          <button onClick={alignCenter}>center of canvas</button>
+          <button onClick={sendForward}>Send Forwrard</button>
+          <button onClick={sendBackward}>Send sendBackwards</button>
+          <button onClick={stateChange}>state change</button>
+          <button onClick={onRemove}>X</button>
+        </div>
 
-      <input type="file" id="file" onChange={onImageUpload} accept="image/*" />
-      <input type="number" name="quantity" defaultValue={fontSize} key={fontSize} min="10" max="80" onChange={onSetFontSize} />
+        <input type="file" id="file" onChange={onImageUpload} accept="image/*" />
+        <input type="number" name="quantity" defaultValue={fontSize} key={fontSize} min="10" max="80" onChange={onSetFontSize} />
+      </div>
+      <div>
+        <div ref={divRef}></div>
+        <button onClick={() => {
+          console.log(jexcelRef.current.getHeaders().split(','))
+          console.log(jexcelRef.current.getData())
+        }}>log data</button>
+      </div>
     </div>
   );
 
