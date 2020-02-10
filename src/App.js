@@ -14,7 +14,7 @@ import {
   FaSortNumericUp,
   FaSortNumericDown,
 } from 'react-icons/fa';
-import { FiMoreVertical } from 'react-icons/fi';
+import { MdBorderVertical } from 'react-icons/md';
 
 import Canvas from './components/Canvas';
 
@@ -420,13 +420,13 @@ export default function App() {
           <button onClick={logCanvas}>LOG JSON</button>
           <button onClick={generatePdf}>download</button>
           <button data-tip="Center Horizontally" onClick={alignCenter}>
-            <FiMoreVertical />
+            <MdBorderVertical />
           </button>
           <button data-tip="Move Up" onClick={sendForward}>
-            <FaSortNumericDown />
+            <FaSortNumericUp />
           </button>
           <button data-tip="Move Down" onClick={sendBackward}>
-            <FaSortNumericUp />
+            <FaSortNumericDown />
           </button>
           <button onClick={stateChange}>state change</button>
           <button onClick={onRemove}>X</button>
