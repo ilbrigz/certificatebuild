@@ -1,4 +1,4 @@
-export const preventOutsideMovement = function(e) {
+export const preventOutsideMovement = function (e) {
   var obj = e.target;
   // if object is too big ignore
   if (
@@ -16,22 +16,22 @@ export const preventOutsideMovement = function(e) {
   // bot-right corner
   if (
     obj.getBoundingRect().top + obj.getBoundingRect().height >
-      obj.canvas.height ||
+    obj.canvas.height ||
     obj.getBoundingRect().left + obj.getBoundingRect().width > obj.canvas.width
   ) {
     obj.top = Math.min(
       obj.top,
       obj.canvas.height -
-        obj.getBoundingRect().height +
-        obj.top -
-        obj.getBoundingRect().top
+      obj.getBoundingRect().height +
+      obj.top -
+      obj.getBoundingRect().top
     );
     obj.left = Math.min(
       obj.left,
       obj.canvas.width -
-        obj.getBoundingRect().width +
-        obj.left -
-        obj.getBoundingRect().left
+      obj.getBoundingRect().width +
+      obj.left -
+      obj.getBoundingRect().left
     );
   }
 };
@@ -43,7 +43,7 @@ var scale1y = 0;
 var width1 = 0;
 var height1 = 0;
 
-export const preventOutsideScaling = function(e) {
+export const preventOutsideScaling = function (e) {
   var obj = e.target;
   obj.setCoords();
   var brNew = obj.getBoundingRect();

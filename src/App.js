@@ -7,7 +7,6 @@ import cloneDeep from 'clone-deep';
 import jexcel from 'jexcel';
 import ReactTooltip from 'react-tooltip';
 import pdfFonts from "pdfmake/build/vfs_fonts";
-
 import {
   FaAlignLeft,
   FaAlignRight,
@@ -16,21 +15,28 @@ import {
   FaSortNumericDown,
 } from 'react-icons/fa';
 import { MdBorderVertical } from 'react-icons/md';
-
+import {
+  fabricOptionsOveride,
+  fabricControlOptions,
+  fabricTextOptions,
+  fabricItextOptions,
+  fabricTextboxOptions
+} from './config/fabric.config'
+import { jexcelInstanceOptions } from './config/jexcel.config'
 import Canvas from './components/Canvas';
+import 'fabric-customise-controls';
 
 import {
   preventOutsideMovement,
-  preventOutsideScaling,
+  preventOutsideScaling
 } from './utilty/canvass_helper.js';
-
 import {
   centeredTextProperties,
   leftOrRightAlignedTextProperties,
   textboxMargin,
 } from './utilty/pdf_helper';
-
 import { toDataURL } from './utilty/helper';
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -43,18 +49,11 @@ export default function App() {
   const [count, setCount] = useState(16);
 
   useEffect(() => {
-    jexcelRef.current = jexcel(divRef.current, {
-      minDimensions: [10, 20],
-      defaultColWidth: 100,
-      tableOverflow: true,
-      tableWidth: '842px',
-      tableHeight: '500px',
-      minDimensions: [2, 5],
-      columns: [{ title: 'Column 1' }, { title: 'Column 2' }],
-    });
+    jexcelRef.current = jexcel(divRef.current, jexcelInstanceOptions);
   }, []);
 
   useEffect(() => {
+
     fabricRef.current = new fabric.Canvas(canvasRef.current, {
       objectCaching: false,
       preserveObjectStacking: true,
@@ -72,68 +71,16 @@ export default function App() {
     fabricRef.current.setWidth(842);
     fabricRef.current.renderAll();
 
-    console.log(fabric);
+    fabric.Object.prototype.set(fabricOptionsOveride);
 
-    fabric.Object.prototype.set({
-      transparentCorners: false,
-      cornerColor: '#00FFFF',
-      cornerStrokeColor: 'red',
-      borderColor: 'red',
-      cornerSize: 12,
-      padding: 0,
-      cornerStyle: 'circle',
-      borderDashArray: [3, 3],
-      hasControls: false,
-      hasRotatingPoint: false,
-    });
-
-    // console.log(canvas.forEachObject());
-
-    var text = new fabric.Text('Column 1', {
-      left: 0,
-      fontSize: 30,
-      textAlign: 'center',
-      hasRotatingPoint: false,
-      top: 0,
-      fontFamily: 'Roboto',
-    });
-    var text2 = new fabric.Text('Column 2', {
-      left: 0,
-      fontSize: 30,
-      textAlign: 'center',
-      hasRotatingPoint: false,
-      top: 0,
-      fontFamily: 'Roboto',
-    });
-    var text3 = new fabric.IText('m', {
-      left: 0,
-      top: 0,
-      fontFamily: 'Roboto',
-    });
+    var text = new fabric.Text('Column 1', fabricTextOptions);
+    var text2 = new fabric.Text('Column 2', fabricTextOptions);
+    var text3 = new fabric.IText('m', fabricItextOptions);
     var t1 = new fabric.Textbox(
       'Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.',
-      {
-        width: 200,
-        top: 400,
-        hasControls: true,
-        left: 200,
-        fontSize: 16,
-        padding: 0,
-        textAlign: 'center',
-        fontFamily: 'Roboto',
-      }
+      fabricTextboxOptions
     );
-    t1.setControlsVisibility({
-      mt: false,
-      mb: false,
-      ml: true,
-      mr: true,
-      bl: false,
-      br: false,
-      tl: false,
-      tr: false,
-      mtr: false,
-    });
+    t1.setControlsVisibility(fabricControlOptions);
 
     fabric.Image.fromURL('/certificate2.jpg', function (img) {
       console.log(img);
@@ -149,6 +96,32 @@ export default function App() {
     });
 
     fabricRef.current.add(text3, text2, text, t1);
+    fabric.Canvas.prototype.customiseControls({
+      tl: {
+        cursor: 'pointer',
+        action: (e, target) => {
+          console.log(target)
+          fabricRef.current.remove(target);
+          fabricRef.current.requestRenderAll();
+        },
+      },
+    })
+    fabric.Object.prototype.customiseCornerIcons({
+      settings: {
+        cornerSize: 25,
+        cornerShape: 'circle',
+        cornerBackgroundColor: 'orange',
+        cornerPadding: 10
+      },
+      tl: {
+        icon: '/close.svg',
+        settings: {
+          cornerBackgroundColor: 'white',
+        },
+      },
+    }, function () {
+      fabricRef.current.renderAll();
+    })
   }, []);
 
   const pageWidth = 842;
@@ -285,6 +258,7 @@ export default function App() {
       console.log(arrayObj);
       return arrayObj;
     }
+
   };
 
   const alignCenter = () => {
@@ -369,19 +343,12 @@ export default function App() {
         var ch = canvasRef.current.height;
 
         if (cw > ch) {
-          /** canvas ist landscape **/
           imageinstance.scaleToWidth(canvasRef.current.width - 200);
           imageinstance.scaleToHeight(canvasRef.current.height - 200);
         } else {
-          /** canvas ist portrait **/
           imageinstance.scaleToHeight(canvasRef.current.height - 200);
           imageinstance.scaleToWidth(canvasRef.current.width - 200);
         }
-
-        // imageinstance.setControlsVisibility(HideControls);
-        //imageinstance.cornerSize(40);
-        //  imageinstance["cornerSize"] = parseFloat(40);
-        // removes the right top control
         fabricRef.current.add(imageinstance);
         fabricRef.current.centerObject(imageinstance);
       };
