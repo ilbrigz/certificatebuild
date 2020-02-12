@@ -6,7 +6,7 @@ import { readAndCompressImage } from 'browser-image-resizer';
 import cloneDeep from 'clone-deep';
 import jexcel from 'jexcel';
 import ReactTooltip from 'react-tooltip';
-import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 import {
   FaAlignLeft,
   FaAlignRight,
@@ -20,15 +20,15 @@ import {
   fabricControlOptions,
   fabricTextOptions,
   fabricItextOptions,
-  fabricTextboxOptions
-} from './config/fabric.config'
-import { jexcelInstanceOptions } from './config/jexcel.config'
+  fabricTextboxOptions,
+} from './config/fabric.config';
+import { jexcelInstanceOptions } from './config/jexcel.config';
 import Canvas from './components/Canvas';
 import 'fabric-customise-controls';
 
 import {
   preventOutsideMovement,
-  preventOutsideScaling
+  preventOutsideScaling,
 } from './utilty/canvass_helper.js';
 import {
   centeredTextProperties,
@@ -36,7 +36,6 @@ import {
   textboxMargin,
 } from './utilty/pdf_helper';
 import { toDataURL } from './utilty/helper';
-
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -53,7 +52,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-
     fabricRef.current = new fabric.Canvas(canvasRef.current, {
       objectCaching: false,
       preserveObjectStacking: true,
@@ -82,7 +80,7 @@ export default function App() {
     );
     t1.setControlsVisibility(fabricControlOptions);
 
-    fabric.Image.fromURL('/certificate2.jpg', function (img) {
+    fabric.Image.fromURL('/certificate2.jpg', function(img) {
       console.log(img);
       const image = fabricRef.current.setBackgroundImage(
         img,
@@ -100,28 +98,29 @@ export default function App() {
       tl: {
         cursor: 'pointer',
         action: (e, target) => {
-          console.log(target)
+          console.log(target);
           fabricRef.current.remove(target);
           fabricRef.current.requestRenderAll();
         },
       },
-    })
-    fabric.Object.prototype.customiseCornerIcons({
-      settings: {
-        cornerSize: 25,
-        cornerShape: 'circle',
-        cornerBackgroundColor: 'orange',
-        cornerPadding: 10
-      },
-      tl: {
-        icon: '/close.svg',
+    });
+    fabric.Object.prototype.customiseCornerIcons(
+      {
         settings: {
-          cornerBackgroundColor: 'white',
+          cornerShape: 'circle',
+          cornerBackgroundColor: 'orange',
+        },
+        tl: {
+          icon: '/close.svg',
+          settings: {
+            cornerBackgroundColor: 'white',
+          },
         },
       },
-    }, function () {
-      fabricRef.current.renderAll();
-    })
+      function() {
+        fabricRef.current.renderAll();
+      }
+    );
   }, []);
 
   const pageWidth = 842;
@@ -144,7 +143,7 @@ export default function App() {
     const jsonCanvas = fabricRef.current.toObject();
     const headers = jexcelRef.current.getHeaders().split(',');
     const filteredData = jexcelRef.current.getData().filter((a) =>
-      a.some(function (x) {
+      a.some(function(x) {
         return x;
       })
     );
@@ -234,8 +233,8 @@ export default function App() {
         normal: 'Roboto-Regular.ttf',
         bold: 'Roboto-Medium.ttf',
         italics: 'Roboto-Italic.ttf',
-        bolditalics: 'Roboto-MediumItalic.ttf'
-      }
+        bolditalics: 'Roboto-MediumItalic.ttf',
+      },
     };
 
     const docDefinition = cloneDeep({
@@ -258,7 +257,6 @@ export default function App() {
       console.log(arrayObj);
       return arrayObj;
     }
-
   };
 
   const alignCenter = () => {
@@ -327,11 +325,11 @@ export default function App() {
 
     const readerobj = new FileReader();
 
-    readerobj.onload = function () {
+    readerobj.onload = function() {
       var imgElement = document.createElement('img');
       imgElement.src = readerobj.result;
 
-      imgElement.onload = function () {
+      imgElement.onload = function() {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,
@@ -402,10 +400,10 @@ export default function App() {
           <button data-tip="Center Horizontally" onClick={alignCenter}>
             <MdBorderVertical />
           </button>
-          <button data-tip="Move Up" onClick={sendForward}>
+          <button data-tip="Send Forward" onClick={sendForward}>
             <FaSortNumericUp />
           </button>
-          <button data-tip="Move Down" onClick={sendBackward}>
+          <button data-tip="Send Backward" onClick={sendBackward}>
             <FaSortNumericDown />
           </button>
           <button onClick={stateChange}>state change</button>
