@@ -72,7 +72,19 @@ export default function App() {
     fabric.Object.prototype.set(fabricOptionsOveride);
 
     var text = new fabric.Text('Column 1', fabricTextOptions);
+    text.setControlsVisibility({
+      mt: false,
+      mb: false,
+      ml: false,
+      mr: false,
+      bl: false,
+      br: false,
+      tl: true,
+      tr: false,
+      mt: false,
+    })
     var text2 = new fabric.Text('Column 2', fabricTextOptions);
+    console.log(fabric)
     var text3 = new fabric.IText('m', fabricItextOptions);
     var t1 = new fabric.Textbox(
       'Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.',
@@ -80,7 +92,7 @@ export default function App() {
     );
     t1.setControlsVisibility(fabricControlOptions);
 
-    fabric.Image.fromURL('/certificate2.jpg', function(img) {
+    fabric.Image.fromURL('/certificate2.jpg', function (img) {
       console.log(img);
       const image = fabricRef.current.setBackgroundImage(
         img,
@@ -90,7 +102,6 @@ export default function App() {
           scaleY: fabricRef.current.height / img.height,
         }
       );
-      console.log(img);
     });
 
     fabricRef.current.add(text3, text2, text, t1);
@@ -117,7 +128,7 @@ export default function App() {
           },
         },
       },
-      function() {
+      function () {
         fabricRef.current.renderAll();
       }
     );
@@ -143,7 +154,7 @@ export default function App() {
     const jsonCanvas = fabricRef.current.toObject();
     const headers = jexcelRef.current.getHeaders().split(',');
     const filteredData = jexcelRef.current.getData().filter((a) =>
-      a.some(function(x) {
+      a.some(function (x) {
         return x;
       })
     );
@@ -325,11 +336,11 @@ export default function App() {
 
     const readerobj = new FileReader();
 
-    readerobj.onload = function() {
+    readerobj.onload = function () {
       var imgElement = document.createElement('img');
       imgElement.src = readerobj.result;
 
-      imgElement.onload = function() {
+      imgElement.onload = function () {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,

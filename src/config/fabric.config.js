@@ -7,7 +7,7 @@ export const fabricOptionsOveride = {
     padding: 0,
     cornerStyle: 'circle',
     borderDashArray: [3, 3],
-    hasControls: false,
+    // hasControls: false,
     hasRotatingPoint: false,
     fontFamily: 'Roboto',
 }
@@ -40,6 +40,7 @@ export const fabricItextOptions = {
     left: 0,
     top: 0,
     fontFamily: 'Roboto',
+    hasControls: true,
 }
 
 export const fabricTextboxOptions = {
