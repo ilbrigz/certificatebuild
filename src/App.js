@@ -56,6 +56,8 @@ export default function App() {
       objectCaching: false,
       preserveObjectStacking: true,
       fontSize: 20,
+      altActionKey: 'none',
+      selectionKey: 'ctrlKey',
     });
     fabricRef.current.on('object:moving', preventOutsideMovement);
     fabricRef.current.on('selection:created', (e) => {
