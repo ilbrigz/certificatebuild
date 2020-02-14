@@ -60,6 +60,7 @@ export default function App() {
         fontSize: 20,
         altActionKey: 'none',
         selectionKey: 'ctrlKey',
+        allowTouchScrolling: true
       });
       fabricRef.current.on('object:moving', preventOutsideMovement);
       fabricRef.current.on('selection:created', (e) => {
