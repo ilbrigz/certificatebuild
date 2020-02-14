@@ -1,3 +1,9 @@
-p {
-  font-family: 'Roboto', sans-serif;
+@font-face {
+  src: url('/OldLondon.ttf');
+  font-family: 'OldLondon';
+}
+
+p,
+button {
+  font-family: 'OldLondon', sans-serif;
 }
