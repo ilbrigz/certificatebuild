@@ -86,7 +86,6 @@ export default function App() {
       mt: false,
     })
     var text2 = new fabric.Text('Column 2', fabricTextOptions);
-    console.log(fabric)
     var text3 = new fabric.IText('m', fabricItextOptions);
     var t1 = new fabric.Textbox(
       'Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.',
@@ -421,6 +420,9 @@ export default function App() {
           </button>
           <button onClick={stateChange}>state change</button>
           <button onClick={onRemove}>X</button>
+          <button onClick={() => {
+            fabricRef.current.requestRenderAll();
+          }}>reredner</button>
         </div>
 
         <input
