@@ -5,11 +5,10 @@ export const fabricOptionsOveride = {
   borderColor: 'green',
   cornerSize: 12,
   padding: 0,
-  cornerStyle: 'circle',
   borderDashArray: [3, 3],
-  // hasControls: false,
+  hasControls: false,
   hasRotatingPoint: false,
-  fontFamily: 'Roboto',
+  fontFamily: 'OldLondon',
 };
 
 export const fabricControlOptions = {

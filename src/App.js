@@ -1,20 +1,12 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { fabric } from 'fabric';
 import pdfMake from 'pdfmake';
-import { readAndCompressImage } from 'browser-image-resizer';
+
 import cloneDeep from 'clone-deep';
 import jexcel from 'jexcel';
-import ReactTooltip from 'react-tooltip';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import FontFaceObserver from 'fontfaceobserver';
-import {
-  FaAlignLeft,
-  FaAlignRight,
-  FaAlignCenter,
-  FaSortNumericUp,
-  FaSortNumericDown,
-} from 'react-icons/fa';
-import { MdBorderVertical, MdBorderHorizontal } from 'react-icons/md';
+
 import {
   fabricOptionsOveride,
   fabricControlOptions,
@@ -22,13 +14,13 @@ import {
   fabricItextOptions,
   fabricTextboxOptions,
 } from './config/fabric.config';
+import Controls from './components/Controls'
 import { jexcelInstanceOptions } from './config/jexcel.config';
 import Canvas from './components/Canvas';
 import 'fabric-customise-controls';
 
 import {
   preventOutsideMovement,
-  preventOutsideScaling,
 } from './utilty/canvass_helper.js';
 import {
   centeredTextProperties,
@@ -36,14 +28,15 @@ import {
   textboxMargin,
 } from './utilty/pdf_helper';
 import { toDataURL } from './utilty/helper';
+import './App.css'
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 export default function App() {
   const canvasRef = useRef(null);
   const divRef = useRef(null);
   const jexcelRef = useRef(null);
   const fabricRef = useRef(null);
+  const [controlsKey, setControlsKey] = useState(0)
   const [fontSize, setFontSize] = useState(16);
   const [count, setCount] = useState(16);
 
@@ -60,16 +53,25 @@ export default function App() {
         fontSize: 20,
         altActionKey: 'none',
         selectionKey: 'ctrlKey',
-        allowTouchScrolling: true
+        allowTouchScrolling: true,
       });
       fabricRef.current.on('object:moving', preventOutsideMovement);
+      fabricRef.current.on('object:moving', function (options) {
+        if (options.target.type === 'image' && Math.round(options.target.left / 50 * 4) % 4 == 0 &&
+          Math.round(options.target.top / 50 * 4) % 4 == 0) {
+          options.target.set({
+            left: Math.round(options.target.left / 50) * 50,
+            top: Math.round(options.target.top / 50) * 50
+          }).setCoords();
+        }
+      });
       fabricRef.current.on('selection:created', (e) => {
+        console.log('from app')
         if (e.target.fontSize) {
           setFontSize(parseInt(e.target.fontSize));
         }
       });
 
-      fabricRef.current.on('object:scaling', preventOutsideScaling);
       fabricRef.current.setHeight(595);
       fabricRef.current.setWidth(842);
       fabricRef.current.renderAll();
@@ -77,7 +79,9 @@ export default function App() {
       fabric.Object.prototype.set(fabricOptionsOveride);
 
       var text = new fabric.Text('Column 1', fabricTextOptions);
-      text.set('fontFamily', 'OldLondon');
+      text.set({ fontWeight: 'bold', fontStyle: 'italic' })
+      const styles = text.getSelectionStyles();
+      console.log(styles)
       text.setControlsVisibility({
         mt: false,
         mb: false,
@@ -90,8 +94,7 @@ export default function App() {
         mt: false,
       });
       var text2 = new fabric.Text('Column 2', fabricTextOptions);
-      console.log(fabric);
-      var text3 = new fabric.IText('m', fabricItextOptions);
+      var text3 = new fabric.IText('m', { ...fabricItextOptions, fontWeight: 'bold' });
       var t1 = new fabric.Textbox(
         'Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.',
         fabricTextboxOptions
@@ -138,6 +141,15 @@ export default function App() {
           fabricRef.current.renderAll();
         }
       );
+      let obj = fabricRef.current._objects.filter((o) => {
+        return o.type === 'text' || o.type === 'textbox' || o.type === 'i-text'
+      })
+      obj.forEach(function (item, i) {
+        item.set('fontFamily', 'OldLondon');
+      });
+      fabricRef.current.requestRenderAll();
+
+      setControlsKey(Math.random())
     });
   }, []);
 
@@ -181,6 +193,9 @@ export default function App() {
           },
           fontSize: objects[i].fontSize,
           alignment: objects[i].textAlign,
+          ...(objects[i].underline && { decoration: 'underline' }),
+          ...(objects[i].fontStyle === 'italic' && { italics: true }),
+          ...(objects[i].fontWeight === 'bold' && { bold: true }),
         });
       }
       if (objects[i].type === 'image') {
@@ -204,6 +219,9 @@ export default function App() {
           },
           fontSize: objects[i].fontSize,
           alignment: objects[i].textAlign,
+          ...(objects[i].underline && { decoration: 'underline' }),
+          ...(objects[i].fontStyle === 'italic' && { italics: true }),
+          ...(objects[i].fontWeight === 'bold' && { bold: true }),
           margin: textboxMargin(objects[i].left, objects[i].width, 842),
         });
       }
@@ -214,6 +232,9 @@ export default function App() {
           ...(objects[i].textAlign === 'center'
             ? centeredTextProperties(objects[i], pageWidth)
             : leftOrRightAlignedTextProperties(objects[i], pageWidth)),
+          ...(objects[i].underline && { decoration: 'underline' }),
+          ...(objects[i].fontStyle === 'italic' && { italics: true }),
+          ...(objects[i].fontWeight === 'bold' && { bold: true }),
           fontSize: objects[i].fontSize,
         });
       }
@@ -278,201 +299,31 @@ export default function App() {
     }
   };
 
-  const alignHorizotal = () => {
-    const activeEl = fabricRef.current.getActiveObject();
-    fabricRef.current.centerObjectH(activeEl);
-  };
-
-  const alignVertical = () => {
-    const activeEl = fabricRef.current.getActiveObject();
-    fabricRef.current.centerObjectV(activeEl);
-  };
-
-  const sendForward = () => {
-    const activeEl = fabricRef.current.getActiveObject();
-    if (activeEl && activeEl.type) {
-      fabricRef.current.bringForward(activeEl);
-      fabricRef.current.requestRenderAll();
-    }
-  };
-
-  const sendBackward = () => {
-    const activeEl = fabricRef.current.getActiveObject();
-    if (activeEl && activeEl.type) {
-      fabricRef.current.sendBackwards(activeEl);
-      fabricRef.current.requestRenderAll();
-    }
-  };
-
-  const onSetFontSize = (e) => {
-    console.log(e.target.value);
-    const activeEl = fabricRef.current.getActiveObject();
-    if (activeEl) {
-      activeEl.set('fontSize', e.target.value.toString());
-      fabricRef.current.requestRenderAll();
-    }
-  };
-
-  const onAlignText = (propertyValue, e) => {
-    const activeEl = fabricRef.current.getActiveObject();
-    if (activeEl) {
-      activeEl.set('textAlign', propertyValue);
-      fabricRef.current.requestRenderAll();
-    }
-  };
-
-  const onRemove = (e) => {
-    const activeEl = fabricRef.current.getActiveObject();
-    if (activeEl) {
-      fabricRef.current.remove(activeEl);
-      // fabricRef.current.requestRenderAll();
-    }
-  };
-
-  const onImageUpload = async (e) => {
-    const config = {
-      quality: 0.4,
-      maxWidth: canvasRef.current.width / 2,
-      maxHeight: canvasRef.current.height / 2,
-      mimeType: e.target.files[0].type,
-    };
-
-    if (!e.target.files[0]) return;
-
-    let inputforupload = await readAndCompressImage(e.target.files[0], config);
-
-    const readerobj = new FileReader();
-
-    readerobj.onload = function () {
-      var imgElement = document.createElement('img');
-      imgElement.src = readerobj.result;
-
-      imgElement.onload = function () {
-        var imageinstance = new fabric.Image(imgElement, {
-          angle: 0,
-          opacity: 1,
-          cornerSize: 12,
-          hasControls: true,
-        });
-
-        var cw = canvasRef.current.width;
-        var ch = canvasRef.current.height;
-
-        if (cw > ch) {
-          imageinstance.scaleToWidth(canvasRef.current.width - 200);
-          imageinstance.scaleToHeight(canvasRef.current.height - 200);
-        } else {
-          imageinstance.scaleToHeight(canvasRef.current.height - 200);
-          imageinstance.scaleToWidth(canvasRef.current.width - 200);
-        }
-        fabricRef.current.add(imageinstance);
-        fabricRef.current.centerObject(imageinstance);
-      };
-    };
-
-    readerobj.readAsDataURL(inputforupload);
-  };
-
-  const logCanvas = () => {
-    const activeEl = fabricRef.current.getActiveObject();
-    if (activeEl) {
-      console.log(activeEl.toObject());
-      return;
-    }
-    console.log(fabricRef.current.toObject());
-    // console.log(JSON.stringify( fabricRef.current));
-  };
-
-  const testing = () => {
-    fabricRef.current.clear();
-  };
-
   const stateChange = () => {
     setCount(count + 1);
   };
 
   return (
     <div style={{ display: 'flex' }}>
-      <ReactTooltip />
       <div>
         <Canvas ref={canvasRef} />
-        <div>
-          <button onClick={testing}>testing</button>
-          <button
-            data-tip="Text Align Left"
-            onClick={() => onAlignText('left')}
-          >
-            <FaAlignLeft />
-          </button>
-          <button
-            data-tip="Text Align Center"
-            onClick={() => onAlignText('center')}
-          >
-            <FaAlignCenter />
-          </button>
-          <button
-            data-tip="Text Align Right"
-            onClick={() => onAlignText('right')}
-          >
-            <FaAlignRight />
-          </button>
-        </div>
-        <div>
-          <button onClick={logCanvas}>LOG JSON</button>
-          <button onClick={generatePdf}>download</button>
-          <button data-tip="Center Horizontally" onClick={alignHorizotal}>
-            <MdBorderVertical />
-          </button>
-
-          <button data-tip="Center Horizontally" onClick={alignVertical}>
-            <MdBorderHorizontal />
-          </button>
-          <button data-tip="Send Forward" onClick={sendForward}>
-            <FaSortNumericUp />
-          </button>
-          <button data-tip="Send Backward" onClick={sendBackward}>
-            <FaSortNumericDown />
-          </button>
-          <button onClick={stateChange}>state change</button>
-          <button
-            onClick={() => {
-              fabricRef.current.requestRenderAll();
-            }}
-          >
-            rerender
-          </button>
-          <button onClick={onRemove}>X</button>
-          <button onClick={() => {
-            fabricRef.current.requestRenderAll();
-          }}>reredner</button>
-        </div>
-
-        <input
-          type="file"
-          id="file"
-          onChange={onImageUpload}
-          accept="image/*"
-        />
-        <input
-          type="number"
-          name="quantity"
-          defaultValue={fontSize}
-          key={fontSize}
-          min="10"
-          max="80"
-          onChange={onSetFontSize}
+        <Controls fontSize={fontSize}
+          currentCanvas={() => canvasRef.current}
+          currentFabric={() => fabricRef.current}
+          generatePdf={generatePdf}
+          key={controlsKey}
         />
       </div>
       <div>
         <div ref={divRef}></div>
-        <button
+        {/* <button
           onClick={() => {
-            console.log(jexcelRef.current.getHeaders().split(','));
-            console.log(jexcelRef.current.getData());
+            console.log(jexcel.getHeaders().split(','));
+            console.log(jexcel.getData());
           }}
         >
           log data
-        </button>
+        </button> */}
       </div>
     </div>
   );

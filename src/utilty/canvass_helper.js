@@ -42,30 +42,3 @@ var scale1x = 0;
 var scale1y = 0;
 var width1 = 0;
 var height1 = 0;
-
-export const preventOutsideScaling = function (e) {
-  var obj = e.target;
-  obj.setCoords();
-  var brNew = obj.getBoundingRect();
-
-  if (
-    brNew.width + brNew.left >= obj.canvas.width ||
-    brNew.height + brNew.top >= obj.canvas.height ||
-    brNew.left < 0 ||
-    brNew.top < 0
-  ) {
-    obj.left = left1;
-    obj.top = top1;
-    obj.scaleX = scale1x;
-    obj.scaleY = scale1y;
-    obj.width = width1;
-    obj.height = height1;
-  } else {
-    left1 = obj.left;
-    top1 = obj.top;
-    scale1x = obj.scaleX;
-    scale1y = obj.scaleY;
-    width1 = obj.width;
-    height1 = obj.height;
-  }
-};
