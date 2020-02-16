@@ -9,10 +9,10 @@ import FontFaceObserver from 'fontfaceobserver';
 
 import {
   fabricOptionsOveride,
-  fabricControlOptions,
   fabricTextOptions,
   fabricItextOptions,
   fabricTextboxOptions,
+  fabricTextboxControlOptions,
 } from './config/fabric.config';
 import Controls from './components/Controls'
 import { jexcelInstanceOptions } from './config/jexcel.config';
@@ -40,9 +40,6 @@ export default function App() {
   const [fontSize, setFontSize] = useState(16);
   const [count, setCount] = useState(16);
 
-  useEffect(() => {
-    jexcelRef.current = jexcel(divRef.current, jexcelInstanceOptions);
-  }, []);
 
   useEffect(() => {
     var myfont = new FontFaceObserver('OldLondon');
@@ -66,7 +63,6 @@ export default function App() {
         }
       });
       fabricRef.current.on('selection:created', (e) => {
-        console.log('from app')
         if (e.target.fontSize) {
           setFontSize(parseInt(e.target.fontSize));
         }
@@ -94,12 +90,11 @@ export default function App() {
         mt: false,
       });
       var text2 = new fabric.Text('Column 2', fabricTextOptions);
-      var text3 = new fabric.IText('m', { ...fabricItextOptions, fontWeight: 'bold' });
       var t1 = new fabric.Textbox(
         'Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.',
         fabricTextboxOptions
       );
-      t1.setControlsVisibility(fabricControlOptions);
+      t1.setControlsVisibility(fabricTextboxControlOptions);
 
       fabric.Image.fromURL('/certificate2.jpg', function (img) {
         console.log(img);
@@ -113,7 +108,7 @@ export default function App() {
         );
       });
 
-      fabricRef.current.add(text3, text2, text, t1);
+      fabricRef.current.add(text2, text, t1);
       fabric.Canvas.prototype.customiseControls({
         tl: {
           cursor: 'pointer',
@@ -149,6 +144,16 @@ export default function App() {
       });
       fabricRef.current.requestRenderAll();
 
+      //#########JEXCEL############
+      jexcelRef.current = jexcel(divRef.current, {
+        ...jexcelInstanceOptions,
+        onchangeheader: (a, b, c, d, e) => {
+          onColumnNameChange(c, d)
+        },
+        oninsertcolumn: (a, b, c, d, e, f) => {
+          onHeaderInsert()
+        }
+      })
       setControlsKey(Math.random())
     });
   }, []);
@@ -156,6 +161,28 @@ export default function App() {
   const pageWidth = 842;
   const pageHeight = 695;
   const quality = 1;
+
+  const onColumnNameChange = (prevText, newText) => {
+    let objects = fabricRef.current.getObjects()
+    const text = objects.find((i) => i.text === prevText);
+    text.text = newText
+    fabricRef.current.renderAll()
+    text.setCoords()
+  }
+  const onHeaderInsert = () => {
+    const objects = fabricRef.current.getObjects().filter((item) => item.type === 'text');
+    const headers = jexcelRef.current.getHeaders().split(",")
+    console.log(objects)
+    console.log(headers)
+    const newColumns = headers.filter((header) => !objects.find((object) => {
+      return object.text === header
+    }));
+    newColumns.forEach(headerName => {
+      const text = new fabric.Text(headerName, { ...fabricTextOptions, top: canvasRef.current.height / 5 * Math.random(), left: canvasRef.current.width / 5 * Math.random() });
+      fabricRef.current.add(text)
+    })
+    fabricRef.current.renderAll();
+  }
 
   const generatePdf = async () => {
     const image = await toDataURL('/certificate2.jpg', {
@@ -299,9 +326,6 @@ export default function App() {
     }
   };
 
-  const stateChange = () => {
-    setCount(count + 1);
-  };
 
   return (
     <div style={{ display: 'flex' }}>
