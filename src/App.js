@@ -72,7 +72,7 @@ export default function App() {
 
       fabric.Object.prototype.set(fabricOptionsOveride);
 
-      var text = new fabric.Text('Column 1', fabricTextOptions);
+      var text = new fabric.Text('[Column 1]', fabricTextOptions);
       text.set({ fontWeight: 'bold', fontStyle: 'italic' })
       const styles = text.getSelectionStyles();
       console.log(styles)
@@ -87,7 +87,7 @@ export default function App() {
         tr: false,
         mt: false,
       });
-      var text2 = new fabric.Text('Column 2', fabricTextOptions);
+      var text2 = new fabric.Text('[Column 2]', fabricTextOptions);
       var t1 = new fabric.Textbox(
         'Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.',
         fabricTextboxOptions
@@ -244,6 +244,7 @@ export default function App() {
           ...(objects[i].underline && { decoration: 'underline' }),
           ...(objects[i].fontStyle === 'italic' && { italics: true }),
           ...(objects[i].fontWeight === 'bold' && { bold: true }),
+          color: objects[i].fill
         });
       }
       if (objects[i].type === 'image') {
@@ -271,7 +272,8 @@ export default function App() {
           ...(objects[i].fontStyle === 'italic' && { italics: true }),
           ...(objects[i].fontWeight === 'bold' && { bold: true }),
           margin: textboxMargin(objects[i].left, objects[i].width, 842),
-        });
+          color: objects[i].fill
+        })
       }
 
       if (objects[i].type === 'text') {
@@ -284,6 +286,7 @@ export default function App() {
           ...(objects[i].fontStyle === 'italic' && { italics: true }),
           ...(objects[i].fontWeight === 'bold' && { bold: true }),
           fontSize: objects[i].fontSize,
+          color: objects[i].fill
         });
       }
     }
