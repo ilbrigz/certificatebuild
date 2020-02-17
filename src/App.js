@@ -10,7 +10,6 @@ import FontFaceObserver from 'fontfaceobserver';
 import {
   fabricOptionsOveride,
   fabricTextOptions,
-  fabricItextOptions,
   fabricTextboxOptions,
   fabricTextboxControlOptions,
 } from './config/fabric.config';
@@ -147,11 +146,14 @@ export default function App() {
       //#########JEXCEL############
       jexcelRef.current = jexcel(divRef.current, {
         ...jexcelInstanceOptions,
-        onchangeheader: (a, b, c, d, e) => {
-          onColumnNameChange(c, d)
+        onchangeheader: (a, b, c, d) => {
+          onColumnNameChange(b, c, d)
         },
-        oninsertcolumn: (a, b, c, d, e, f) => {
+        oninsertcolumn: () => {
           onHeaderInsert()
+        },
+        onbeforedeletecolumn: (a, b, c, d, e) => {
+          return onHeaderDelete(b)
         }
       })
       setControlsKey(Math.random())
@@ -162,8 +164,21 @@ export default function App() {
   const pageHeight = 695;
   const quality = 1;
 
-  const onColumnNameChange = (prevText, newText) => {
-    let objects = fabricRef.current.getObjects()
+  const onColumnNameChange = (index, prevText, newText) => {
+    if (!newText) return;
+    const headers = jexcelRef.current.getHeaders().split(",")
+    const duplicates = headers.filter((i) => newText === i)
+    if (duplicates.length > 1) {
+      console.log(headers)
+      alert('Column Name must be unique!');
+      jexcelRef.current.setHeader(index, prevText);
+      return;
+    }
+    console.log(headers)
+    console.log(prevText)
+    const objects = fabricRef.current.getObjects().filter((item) => item.type === 'text');
+    const alreadyPresent = objects.filter(i => i.text === newText).length
+    if (alreadyPresent) { return }
     const text = objects.find((i) => i.text === prevText);
     text.text = newText
     fabricRef.current.renderAll()
@@ -172,8 +187,6 @@ export default function App() {
   const onHeaderInsert = () => {
     const objects = fabricRef.current.getObjects().filter((item) => item.type === 'text');
     const headers = jexcelRef.current.getHeaders().split(",")
-    console.log(objects)
-    console.log(headers)
     const newColumns = headers.filter((header) => !objects.find((object) => {
       return object.text === header
     }));
@@ -182,6 +195,15 @@ export default function App() {
       fabricRef.current.add(text)
     })
     fabricRef.current.renderAll();
+  }
+
+  const onHeaderDelete = (headerIndex) => {
+    const headers = jexcelRef.current.getHeaders().split(",")
+    const objects = fabricRef.current.getObjects().filter((item) => item.type === 'text');
+    const objectToDelete = objects.find(i => i.text === headers[headerIndex])
+    fabricRef.current.remove(objectToDelete);
+    return true
+
   }
 
   const generatePdf = async () => {

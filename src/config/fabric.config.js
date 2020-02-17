@@ -12,24 +12,21 @@ export const fabricOptionsOveride = {
 };
 
 export const fabricTextboxControlOptions = {
-  // mt: false,
   mb: false,
   ml: true,
   mr: true,
   bl: false,
   br: false,
-  // tl: false,
   tr: false,
   mt: false,
 };
 export const fabricTextControlOptions = {
-  // mt: false,
   mb: false,
   ml: false,
   mr: false,
+  tl: true,
   bl: false,
   br: false,
-  // tl: false,
   tr: false,
   mt: false,
 };
@@ -43,6 +40,7 @@ export const fabricTextOptions = {
   cornerStrokeColor: 'red',
   borderColor: 'red',
   fontFamily: 'Roboto',
+  hoverCursor: 'not-allowed'
 };
 
 export const fabricItextOptions = {
