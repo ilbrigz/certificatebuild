@@ -39,7 +39,6 @@ export default function App() {
   const [fontSize, setFontSize] = useState(16);
   const [count, setCount] = useState(16);
 
-
   useEffect(() => {
     var myfont = new FontFaceObserver('OldLondon');
     myfont.load().then(() => {
