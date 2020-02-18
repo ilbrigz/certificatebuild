@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import ReactTooltip from 'react-tooltip';
-import { CompactPicker } from 'react-color'
+import { CompactPicker } from 'react-color';
 import {
   FaAlignLeft,
   FaAlignRight,
@@ -19,6 +19,7 @@ import {
   MdClose,
   MdTitle,
 } from 'react-icons/md';
+import { AiOutlineFontColors } from 'react-icons/ai';
 
 import {
   fabricTextboxOptions,
@@ -32,7 +33,7 @@ import { readAndCompressImage } from 'browser-image-resizer';
 
 const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
   const [selectedObj, setSelectedObj] = useState({});
-  const [showPicker, setShowPicker] = useState(false)
+  const [showPicker, setShowPicker] = useState(false);
   useEffect(() => {
     const fabricIns = currentFabric();
     if (fabricIns) {
@@ -197,11 +198,11 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
 
     const readerobj = new FileReader();
 
-    readerobj.onload = function () {
+    readerobj.onload = function() {
       var imgElement = document.createElement('img');
       imgElement.src = readerobj.result;
 
-      imgElement.onload = function () {
+      imgElement.onload = function() {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,
@@ -239,7 +240,7 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
 
   const testing = () => {
     let obj = currentFabric().getObjects();
-    obj.forEach(function (item, i) {
+    obj.forEach(function(item, i) {
       item.text = 'hello';
     });
     currentFabric().renderAll();
@@ -268,12 +269,11 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
     currentFabric().add(text);
   };
   const onColorChange = (color, e) => {
-    setFabricProperty('fill', color.hex)
-  }
+    setFabricProperty('fill', color.hex);
+  };
   return (
     <>
-      <div>
-        <button onClick={testing}>testing</button>
+      <div style={{ minHeight: '31px' }}>
         {!!selectedObj.type && (
           <>
             <button
@@ -337,7 +337,7 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
             <button data-tip="Send Backward" onClick={sendBackward}>
               <FaSortNumericDown />
             </button>
-            <button onClick={onRemove} data-tip="Remove Selection">
+            <button onClick={onRemove} data-tip="Delete Selected Item">
               <MdClose />
             </button>
             <ReactTooltip />
@@ -359,6 +359,7 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
         >
           reredner
         </button>
+        <button onClick={testing}>testing</button>
       </div>
 
       <label className="myLabel">
@@ -397,9 +398,32 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
         <button onClick={insertText}>TEXT</button>
         <button onClick={insertText}>TEXTBOX</button>
       </ReactTooltip>
-      <button onClick={() => setShowPicker(!showPicker)}>show picker</button>
-      {showPicker ? <CompactPicker color={selectedObj.fill || '#000000'} onChangeComplete={onColorChange} /> : null}
-      <pre>{JSON.stringify(selectedObj, null, 2)}</pre>
+      <div style={{ display: 'inline-block', position: 'relative' }}>
+        <button onClick={() => setShowPicker(!showPicker)}>
+          <AiOutlineFontColors fill={selectedObj.fill || 'white'} />
+        </button>
+        {showPicker ? (
+          <div
+            style={{ position: 'absolute', zIndex: 999, top: 0, left: '100%' }}
+          >
+            <div
+              onClick={() => setShowPicker(false)}
+              style={{
+                position: 'fixed',
+                top: '0px',
+                right: '0px',
+                bottom: '0px',
+                left: '0px',
+              }}
+            ></div>
+            <CompactPicker
+              color={selectedObj.fill || '#000000'}
+              onChangeComplete={onColorChange}
+            />
+          </div>
+        ) : null}
+      </div>
+      {/* <pre>{JSON.stringify(selectedObj, null, 2)}</pre> */}
     </>
   );
 };
