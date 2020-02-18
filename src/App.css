@@ -3,52 +3,137 @@
    License: none (public domain)
 */
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-	display: block;
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
 body {
-	line-height: 1;
+  line-height: 1;
 }
-ol, ul {
-	list-style: none;
+ol,
+ul {
+  list-style: none;
 }
-blockquote, q {
-	quotes: none;
+blockquote,
+q {
+  quotes: none;
 }
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 @font-face {
   src: url('/OldLondon.ttf');
   font-family: 'OldLondon';
+}
+@font-face {
+  src: url('/OLDENGL.TTF');
+  font-family: 'OldEnglish';
 }
 
 button {
@@ -56,12 +141,15 @@ button {
   border: 1px solid #222;
   background: gray;
   color: white;
- padding: 5px 10px;
+  padding: 5px 10px;
   cursor: pointer;
+  font-family: 'OldEnglish';
+  font-style: italic;
 }
 
 button:active,
-button:hover,.orange {
+button:hover,
+.orange {
   background: orangered;
 }
 
@@ -69,26 +157,26 @@ button:focus {
   outline: none;
 }
 
-label.myLabel input[type="file"] {
-    position:absolute;
-    top: -1000px;
+label.myLabel input[type='file'] {
+  position: absolute;
+  top: -1000px;
 }
 
 /***** Example custom styling *****/
 .myLabel {
-    font: inherit;
+  font: inherit;
   border: 1px solid #222;
   background: gray;
   color: white;
- padding: 6px 10px;
+  padding: 6px 10px;
   cursor: pointer;
 }
 .myLabel:hover {
-    background: #CCC;
+  background: #ccc;
 }
 .myLabel:active {
-    background: #CCF;
+  background: #ccf;
 }
 .myLabel :invalid + span {
-    color: #A44;
+  color: #a44;
 }

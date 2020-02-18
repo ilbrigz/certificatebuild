@@ -4,7 +4,7 @@ import pdfMake from 'pdfmake';
 
 import cloneDeep from 'clone-deep';
 import jexcel from 'jexcel';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import pdfFonts from './vfs_fonts';
 import FontFaceObserver from 'fontfaceobserver';
 
 import {
@@ -141,7 +141,7 @@ export default function App() {
         return o.type === 'text' || o.type === 'textbox' || o.type === 'i-text';
       });
       obj.forEach(function(item, i) {
-        item.set('fontFamily', 'OldLondon');
+        item.set('fontFamily', 'OldEnglish');
       });
       fabricRef.current.requestRenderAll();
 
@@ -316,6 +316,7 @@ export default function App() {
           ...(objects[i].fontWeight === 'bold' && { bold: true }),
           margin: textboxMargin(objects[i].left, objects[i].width, 842),
           color: objects[i].fill,
+          font: 'oldEnglish',
         });
       }
 
@@ -364,12 +365,13 @@ export default function App() {
     }
 
     pdfMake.fonts = {
-      Roboto: {
-        normal: 'Roboto-Regular.ttf',
-        bold: 'Roboto-Medium.ttf',
-        italics: 'Roboto-Italic.ttf',
-        bolditalics: 'Roboto-MediumItalic.ttf',
-      },
+      oldEnglish: { normal: 'OLDENGL.TTF', bold: 'OLDENGL.TTF' },
+      // Roboto: {
+      // normal: 'Roboto-Regular.ttf',
+      //   bold: 'Roboto-Medium.ttf',
+      //   italics: 'Roboto-Italic.ttf',
+      //   bolditalics: 'Roboto-MediumItalic.ttf',
+      // },
     };
 
     const docDefinition = cloneDeep({
