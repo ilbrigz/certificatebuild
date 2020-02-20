@@ -18,7 +18,6 @@ import {
   MdFormatBold,
   MdFormatUnderlined,
   MdClose,
-  MdTitle,
 } from 'react-icons/md';
 import { AiOutlineFontColors } from 'react-icons/ai';
 
@@ -59,15 +58,6 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
 
   const alignHorizotal = () => {
     const activeEl = currentFabric().getActiveObject();
-    // if (activeEl.type === 'activeSelection') {
-    //     //somehow I need to subtract half the canvas width to center each element
-    //     const halfCanvas = currentCanvas().width / 2
-    //     activeEl._objects.forEach(i => {
-    //         currentFabric().centerObjectH(i)
-    //         i.left = i.left - halfCanvas
-    //         return
-    //     })
-    // }
     if (activeEl) currentFabric().centerObjectH(activeEl);
   };
 
@@ -162,12 +152,13 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
         setSelectedObj(activeEl.toObject());
         return;
       }
-      console.log(activeEl[property]);
+
       if (activeEl[property] === value) {
         activeEl.set(property, alternative);
       } else {
         activeEl.set(property, value);
       }
+
       currentFabric().requestRenderAll();
       setSelectedObj(activeEl.toObject());
     }
@@ -199,11 +190,11 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
 
     const readerobj = new FileReader();
 
-    readerobj.onload = function() {
+    readerobj.onload = function () {
       var imgElement = document.createElement('img');
       imgElement.src = readerobj.result;
 
-      imgElement.onload = function() {
+      imgElement.onload = function () {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,
@@ -241,7 +232,7 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
 
   const testing = () => {
     let obj = currentFabric().getObjects();
-    obj.forEach(function(item, i) {
+    obj.forEach(function (item, i) {
       item.text = 'hello';
     });
     currentFabric().renderAll();
@@ -258,7 +249,7 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
       text.setControlsVisibility(fabricTextControlOptions);
     } else {
       text = new fabric.Textbox(
-        'Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto Lorem ipsum dibus repellat iusto.',
+        'This is a textbox. You can dobble click me to start editing or expand me to your liking.',
         {
           ...fabricTextboxOptions,
           top: (currentCanvas().height / 5) * Math.random(),
