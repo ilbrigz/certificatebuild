@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { fabric } from 'fabric';
 import pdfMake from 'pdfmake';
-
+import CssBaseline from '@material-ui/core/CssBaseline';
 import cloneDeep from 'clone-deep';
 import jexcel from 'jexcel';
 import pdfFonts from './vfs_fonts';
@@ -399,15 +399,14 @@ export default function App() {
 
   return (
     <>
-      <div>
-        <Controls
-          fontSize={fontSize}
-          currentCanvas={() => canvasRef.current}
-          currentFabric={() => fabricRef.current}
-          generatePdf={generatePdf}
-          key={controlsKey}
-        />
-      </div>
+      <CssBaseline />
+      <Controls
+        fontSize={fontSize}
+        currentCanvas={() => canvasRef.current}
+        currentFabric={() => fabricRef.current}
+        generatePdf={generatePdf}
+        key={controlsKey}
+      />
       <div style={{ display: 'flex' }}>
         <div>
           <Canvas ref={canvasRef} />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import ReactTooltip from 'react-tooltip';
+import Button from '@material-ui/core/Button';
 import { CompactPicker } from 'react-color';
 import {
   FaAlignLeft,
@@ -422,6 +423,7 @@ const Controls = ({ currentFabric, generatePdf, currentCanvas, fontSize }) => {
             />
           </div>
         ) : null}
+        <Button variant="outlined">test</Button>
       </div>
       {/* <pre>{JSON.stringify(selectedObj, null, 2)}</pre> */}
     </>
