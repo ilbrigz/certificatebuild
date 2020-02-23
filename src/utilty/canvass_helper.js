@@ -1,7 +1,7 @@
 export const preventOutsideMovement = function (e) {
   var obj = e.target;
   // if object is too big ignore
-  if (!obj) { return }
+  if (!obj || !obj.canvas) { return }
   if (
     obj.currentHeight > obj.canvas.height ||
     obj.currentWidth > obj.canvas.width
