@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Divider from '@material-ui/core/Divider'
 import { CompactPicker } from 'react-color';
+
+import CtlButton from '../common/CtlButton';
 
 import {
   FaAlignLeft,
@@ -24,13 +25,12 @@ import {
 import { AiOutlineFontColors } from 'react-icons/ai';
 import { AiOutlineFontSize } from 'react-icons/ai';
 import { AppContext } from '../../context';
-import useControlHanders from './useControlHanders'
-import generatePdf from '../../modules/pdfmake.module'
-
+import useControlHanders from './useControlHanders';
+import generatePdf from '../../modules/pdfmake.module';
 
 const Controls = () => {
   const [showPicker, setShowPicker] = useState(false);
-  const { selectedObject, fabricRef, jexcelRef } = React.useContext(AppContext)
+  const { selectedObject, fabricRef, jexcelRef } = React.useContext(AppContext);
   const {
     insertText,
     onImageUpload,
@@ -44,11 +44,12 @@ const Controls = () => {
     onRemove,
     logCanvas,
     testing,
-    onColorChange } = useControlHanders();
+    onColorChange,
+  } = useControlHanders();
 
   const onGeneratePdf = () => {
-    generatePdf({ fabricRef, jexcelRef })
-  }
+    generatePdf({ fabricRef, jexcelRef });
+  };
 
   return (
     <>
@@ -56,22 +57,26 @@ const Controls = () => {
         {!!selectedObject.type && (
           <>
             <ButtonGroup>
-              <Button variant="contained"
-                color="primary"
+              <CtlButton
+                variant="outlined"
                 data-tip="Text Align Left"
                 onClick={() => setFabricProperty('textAlign', 'left')}
-                className={selectedObject.textAlign === 'left' ? 'orange' : ''}
+                isactive={selectedObject.textAlign === 'left' ? 1 : 0}
               >
                 <FaAlignLeft />
-              </Button>
-              <Button variant="outlined"
+              </CtlButton>
+              <Button
+                variant="outlined"
                 data-tip="Text Align Center"
                 onClick={() => setFabricProperty('textAlign', 'center')}
-                className={selectedObject.textAlign === 'center' ? 'orange' : ''}
+                className={
+                  selectedObject.textAlign === 'center' ? 'orange' : ''
+                }
               >
                 <FaAlignCenter />
               </Button>
-              <Button variant="outlined"
+              <Button
+                variant="outlined"
                 data-tip="Text Align Right"
                 onClick={() => setFabricProperty('textAlign', 'right')}
                 className={selectedObject.textAlign === 'right' ? 'orange' : ''}
@@ -79,16 +84,21 @@ const Controls = () => {
                 <FaAlignRight />
               </Button>
             </ButtonGroup>
-            <ButtonGroup><Button variant="outlined"
-              onClick={() => {
-                toggleProperty('fontStyle', 'italic', 'normal');
-              }}
-              className={selectedObject.fontStyle === 'italic' ? 'orange' : ''}
-              data-tip="Italize Text"
-            >
-              <MdFormatItalic />
-            </Button>
-              <Button variant="outlined"
+            <ButtonGroup>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  toggleProperty('fontStyle', 'italic', 'normal');
+                }}
+                className={
+                  selectedObject.fontStyle === 'italic' ? 'orange' : ''
+                }
+                data-tip="Italize Text"
+              >
+                <MdFormatItalic />
+              </Button>
+              <Button
+                variant="outlined"
                 onClick={() => {
                   toggleProperty('fontWeight', 'bold', 'normal');
                 }}
@@ -97,7 +107,8 @@ const Controls = () => {
               >
                 <MdFormatBold />
               </Button>
-              <Button variant="outlined"
+              <Button
+                variant="outlined"
                 onClick={() => {
                   toggleProperty('underline');
                 }}
@@ -107,28 +118,54 @@ const Controls = () => {
                 <MdFormatUnderlined />
               </Button>
             </ButtonGroup>
-            <Button variant="outlined" data-tip="Center Horizontally" onClick={alignHorizotal}>
+            <Button
+              variant="outlined"
+              data-tip="Center Horizontally"
+              onClick={alignHorizotal}
+            >
               <MdBorderVertical />
             </Button>
 
-            <Button variant="outlined" data-tip="Center Horizontally" onClick={alignVertical}>
+            <Button
+              variant="outlined"
+              data-tip="Center Horizontally"
+              onClick={alignVertical}
+            >
               <MdBorderHorizontal />
             </Button>
-            <Button variant="outlined" data-tip="Send Forward" onClick={sendForward}>
+            <Button
+              variant="outlined"
+              data-tip="Send Forward"
+              onClick={sendForward}
+            >
               <FaSortNumericUp />
             </Button>
-            <Button variant="outlined" data-tip="Send Backward" onClick={sendBackward}>
+            <Button
+              variant="outlined"
+              data-tip="Send Backward"
+              onClick={sendBackward}
+            >
               <FaSortNumericDown />
             </Button>
-            <Button variant="outlined" onClick={onRemove} data-tip="Delete Selected Item">
+            <Button
+              variant="outlined"
+              onClick={onRemove}
+              data-tip="Delete Selected Item"
+            >
               <MdClose />
             </Button>
             <ReactTooltip />
           </>
         )}
-        <Button variant="outlined" onClick={logCanvas}>LOG JSON</Button>
-        <Button variant="outlined" onClick={onGeneratePdf}>download</Button>
-        <Button variant="outlined" onClick={testing}>testing</Button>
+        <Button variant="outlined" onClick={logCanvas}>
+          LOG JSON
+        </Button>
+        <Button variant="outlined" onClick={onGeneratePdf}>
+          download
+        </Button>
+        <Button variant="outlined" onClick={testing}>
+          testing
+        </Button>
       </div>
 
       <label className="myLabel">
@@ -164,8 +201,12 @@ const Controls = () => {
         effect="solid"
         clickable={true}
       >
-        <Button variant="outlined" onClick={insertText}>TEXT</Button>
-        <Button variant="outlined" onClick={insertText}>TEXTBOX</Button>
+        <Button variant="outlined" onClick={insertText}>
+          TEXT
+        </Button>
+        <Button variant="outlined" onClick={insertText}>
+          TEXTBOX
+        </Button>
       </ReactTooltip>
       <div style={{ display: 'inline-block', position: 'relative' }}>
         <Button variant="outlined" onClick={() => setShowPicker(!showPicker)}>
@@ -191,10 +232,12 @@ const Controls = () => {
             />
           </div>
         ) : null}
-        <Button variant="outlined" variant="outlined">test</Button>
+        <Button variant="outlined" variant="outlined">
+          test
+        </Button>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default Controls;
