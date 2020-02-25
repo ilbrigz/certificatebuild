@@ -1,17 +1,22 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import Editor from './Editor'
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Header from './Header'
+
+const theme = createMuiTheme({
+    // palette: {
+    //     type: 'dark',
+    // },
+});
+
 export default function Layout() {
     return (
-        <>
+        <ThemeProvider theme={theme}>
             <Header />
             <Container fixed>
                 <Editor />
             </Container>
-        </>
+        </ThemeProvider>
     )
 }

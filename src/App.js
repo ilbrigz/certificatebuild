@@ -10,6 +10,10 @@ export default function App() {
   }, []);
   return (
     <AppContextProvider>
+      <p className="normal">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</p>
+      <p className="bold">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</p>
+      <p className="normal">the quick brown fox jumps over the lazy dog</p>
+      <p className="bold">the quick brown fox jumps over the lazy dog</p>
       <Layout />
     </AppContextProvider>
   );

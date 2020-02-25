@@ -2,6 +2,7 @@ import React from 'react'
 import { fabric } from 'fabric'
 import FontFaceObserver from 'fontfaceobserver';
 import { AppContext } from '../context'
+import { Select } from '@material-ui/core';
 
 import { fabricOptionsOveride, fabricTextOptions, fabricItextOptions, fabricTextboxControlOptions, fabricTextControlOptions, fabricTextboxOptions } from '../config/fabric.config'
 

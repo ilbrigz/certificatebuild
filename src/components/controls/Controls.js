@@ -3,6 +3,8 @@ import ReactTooltip from 'react-tooltip';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { CompactPicker } from 'react-color';
+import { NativeSelect, Grid, FormControl } from '@material-ui/core'
+
 
 import CtlButton from '../common/CtlButton';
 
@@ -235,6 +237,22 @@ const Controls = () => {
         <Button variant="outlined" variant="outlined">
           test
         </Button>
+        <Grid container spacing={1} alignItems="center">
+          <Grid item>
+            <AiOutlineFontSize />
+          </Grid>
+          <Grid item>
+            <NativeSelect
+              value={20}
+              onChange={() => { }}
+              name="age"
+              inputProps={{ 'aria-label': 'age' }} >
+              <option value={10}>Ten</option>
+              <option value={20}>Twenty</option>
+              <option value={30}>Thirty</option>
+            </NativeSelect>
+          </Grid>
+        </Grid>
       </div>
     </>
   );

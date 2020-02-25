@@ -1,0 +1,8 @@
+(italic) obliqui -13
+(bold) style > weight 15 - 1
+
+reqduce size: 
+	cid > convert to cid > adobe g1-5
+	cid > flatten
+	generate font > unceck glymph names
+
