@@ -1,25 +1,27 @@
 @font-face {
-  font-family: "test";
-  src: url("/OERegular.ttf");
+  font-family: OldEnglish;
+  src: url('/OldEnglish.ttf') format('truetype');
+  font-style: normal;
 }
 @font-face {
-  font-family: "test";
-  src: url("/OERegular-Bold.ttf");
+  font-family: OldEnglish;
+  src: url('/OERegularBold2.ttf') format('truetype');
+  font-style: normal;
   font-weight: bold;
-}
-/* @font-face {
-  font-family: "DejaVu Sans";
-  src: url("fonts/DejaVuSans-Oblique.ttf");
-  font-style: italic, oblique;
 }
 @font-face {
-  font-family: "DejaVu Sans";
-  src: url("fonts/DejaVuSans-BoldOblique.ttf");
+  font-family: OldEnglish;
+  src: url('/OldEnglishItalic.ttf') format('truetype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'OldEnglish';
+  src: url('/OldEnglishItalicBold.ttf') format('truetype');
   font-weight: bold;
-  font-style: italic, oblique; */
-/* } */
-.normal{font-family: 'test';font-weight: normal;font-size: 100px;}
-.bold{font-family: 'test'; font-weight: bold; font-size: 100px;}
+  font-style: italic;
+}
+
 button {
   font: inherit;
   border: 1px solid #222;

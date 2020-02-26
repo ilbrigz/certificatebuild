@@ -39,8 +39,7 @@ export const fabricTextOptions = {
   top: 0,
   cornerStrokeColor: 'red',
   borderColor: 'red',
-  fontFamily: 'Roboto',
-  hoverCursor: 'not-allowed'
+  hoverCursor: 'not-allowed',
 };
 
 export const fabricItextOptions = {
