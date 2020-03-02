@@ -1,6 +1,7 @@
 import pdfMake from 'pdfmake';
 import cloneDeep from 'clone-deep';
 import vfsFonts from '../vfs_fonts';
+import RobotoFonts from 'pdfmake/build/vfs_fonts';
 import {
   centeredTextProperties,
   leftOrRightAlignedTextProperties,
@@ -8,10 +9,11 @@ import {
 } from '../utilty/pdf_helper';
 
 import { toDataURL } from '../utilty/helper';
+
+const customFont = { ...vfsFonts.pdfMake.vfs, ...RobotoFonts.pdfMake.vfs };
 const generatePdf = async ({ fabricRef, jexcelRef }) => {
-  pdfMake.vfs = vfsFonts.pdfMake.vfs;
+  pdfMake.vfs = customFont;
   pdfMake.fonts = {
-    // Default font should still be available
     Roboto: {
       normal: 'Roboto-Regular.ttf',
       bold: 'Roboto-Medium.ttf',
@@ -19,11 +21,10 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
       bolditalics: 'Roboto-MediumItalic.ttf',
     },
     OldEnglish: {
-      normal: 'OldEnglish.ttf',
-      //   bold: 'OldEnglish.ttf',
-      bold: 'OERegularBold2.ttf',
-      italics: 'OldEnglishItalic.ttf',
-      bolditalics: 'OldEnglishItalicBold.ttf',
+      normal: 'Old_English_Regular.ttf',
+      bold: 'Old_English_Bold.ttf',
+      italics: 'Old_English_Italic_Italic.ttf',
+      bolditalics: 'Old_English_Bold_Italic.ttf',
     },
   };
 
@@ -55,6 +56,7 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
   for (let i = 0; i < objects.length; i++) {
     if (objects[i].type === 'i-text') {
       singlePageObjects.push({
+        font: objects[i].fontFamily,
         text: objects[i].text,
         absolutePosition: {
           x: objects[i].left,
@@ -66,7 +68,6 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
         ...(objects[i].fontStyle === 'italic' && { italics: true }),
         ...(objects[i].fontWeight === 'bold' && { bold: true }),
         color: objects[i].fill,
-        font: objects[i].fontFamily,
       });
     }
     if (objects[i].type === 'image') {
@@ -83,6 +84,7 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
 
     if (objects[i].type === 'textbox') {
       singlePageObjects.push({
+        font: objects[i].fontFamily,
         text: objects[i].text,
         relativePosition: {
           x: objects[i].left,
@@ -92,18 +94,16 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
         alignment: objects[i].textAlign,
         ...(objects[i].underline && { decoration: 'underline' }),
         ...(objects[i].fontStyle === 'italic' && { italics: true }),
-        // ...(objects[i].fontWeight === 'bold' && { bold: true }),
+        ...(objects[i].fontWeight === 'bold' && { bold: true }),
         margin: textboxMargin(objects[i].left, objects[i].width, 842),
         color: objects[i].fill,
-        bold: true,
-        // font: objects[i].fontFamily,
-        font: 'OldEnglish',
       });
     }
 
     if (objects[i].type === 'text') {
       dynamicObjects.push({
         font: objects[i].fontFamily,
+        // font: 'OldEnglish',
         text: headers.indexOf(
           objects[i].text.substring(2, objects[i].text.length - 2)
         ),
@@ -115,7 +115,7 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
             )),
         ...(objects[i].underline && { decoration: 'underline' }),
         ...(objects[i].fontStyle === 'italic' && { italics: true }),
-        // ...(objects[i].fontWeight === 'bold' && { bold: true }),
+        ...(objects[i].fontWeight === 'bold' && { bold: true }),
         fontSize: objects[i].fontSize,
         color: objects[i].fill,
       });

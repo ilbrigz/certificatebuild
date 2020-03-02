@@ -8,7 +8,7 @@ export const fabricOptionsOveride = {
   borderDashArray: [3, 3],
   hasControls: false,
   hasRotatingPoint: false,
-  // fontFamily: 'OldLondon',
+  fontFamily: 'Roboto',
 };
 
 export const fabricTextboxControlOptions = {
@@ -36,6 +36,7 @@ export const fabricTextOptions = {
   fontSize: 30,
   textAlign: 'center',
   hasRotatingPoint: false,
+  fontFamily: 'Roboto',
   top: 0,
   cornerStrokeColor: 'red',
   borderColor: 'red',
