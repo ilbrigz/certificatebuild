@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import Editor from './Editor'
 import Container from '@material-ui/core/Container';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Header from './Header'
 
 const theme = createMuiTheme({
@@ -10,13 +10,26 @@ const theme = createMuiTheme({
     // },
 });
 
+const useStyles = makeStyles(theme => ({
+
+    container: {
+        backgroundColor: "#f0ece2",
+        padding: "1rem 1rem 1rem 1rem",
+        minHeight: '80vh'
+    }
+}));
+
+
 export default function Layout() {
+    const classes = useStyles();
     return (
-        <ThemeProvider theme={theme}>
-            <Header />
-            <Container fixed>
-                <Editor />
-            </Container>
-        </ThemeProvider>
+        <div style={{ backgroundColor: '#393e46', minHeight: "100vh" }}>
+            <ThemeProvider theme={theme}>
+                <Header />
+                <Container fixed className={classes.container}>
+                    <Editor />
+                </Container>
+            </ThemeProvider>
+        </div>
     )
 }

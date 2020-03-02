@@ -21,9 +21,12 @@
   font-weight: bold;
   font-style: italic;
 }
+html, body {
+  margin: 0; padding: 0
+}
 
 button {
-  font: inherit;
+  font-family: "Roboto", Helvetica, Arial;
   border: 1px solid #222;
   background: gray;
   color: white;
@@ -48,10 +51,11 @@ label.myLabel input[type='file'] {
 
 /***** Example custom styling *****/
 .myLabel {
-  font: inherit;
-  border: 1px solid #222;
-  background: gray;
-  color: white;
+  font-family: "Roboto", Helvetica, Arial;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 3px;
+  background: inherit;
+  color: rgba(0, 0, 0, 0.87);
   padding: 6px 10px;
   cursor: pointer;
 }

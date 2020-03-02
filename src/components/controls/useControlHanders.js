@@ -170,6 +170,14 @@ const useControlHandlers = () => {
 
     const onSetFontSize = (e) => {
         const activeEl = fabricRef.current.getActiveObject();
+        if (activeEl && activeEl.type === 'activeSelection') {
+            activeEl._objects.forEach((i) => {
+                i.set('fontSize', e.target.value.toString());
+                fabricRef.current.requestRenderAll();
+            });
+            setSelectedObject(activeEl.toObject());
+            return;
+        }
         if (activeEl) {
             activeEl.set('fontSize', e.target.value.toString());
             fabricRef.current.requestRenderAll();
