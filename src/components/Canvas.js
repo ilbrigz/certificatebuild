@@ -8,7 +8,7 @@ import {
   fabricTextOptions,
 } from '../config/fabric.config';
 
-import 'fabric-customise-controls';
+// import 'fabric-customise-controls';
 import { preventOutsideMovement } from '../utilty/canvass_helper.js';
 const Canvas = () => {
   const { fabricRef, setSelectedObject, selectedObject } = React.useContext(
