@@ -17,6 +17,8 @@ const Canvas = () => {
   const canvasRef = React.useRef(null);
   React.useEffect(() => {
     var myfont = new FontFaceObserver('OldEnglish');
+    console.log(myfont)
+    myfont.load().then(a => console.log('##############'))
     myfont.load().then(() => {
       const canvas = new fabric.Canvas('canvas', {
         objectCaching: false,
@@ -151,12 +153,12 @@ const Canvas = () => {
 
       // changing all the fonts
 
-      let obj = fabricRef.current._objects.filter((o) => {
-        return o.type === 'text' || o.type === 'textbox' || o.type === 'i-text';
-      });
-      obj.forEach(function (item, i) {
-        item.set('fontFamily', 'OldEnglish');
-      });
+      // let obj = fabricRef.current._objects.filter((o) => {
+      //   return o.type === 'text' || o.type === 'textbox' || o.type === 'i-text';
+      // });
+      // obj.forEach(function (item, i) {
+      //   item.set('fontFamily', 'OldEnglish');
+      // });
 
       fabricRef.current.requestRenderAll();
     });

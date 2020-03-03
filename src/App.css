@@ -1,37 +1,42 @@
 @font-face {
-  font-family: OldEnglish;
-  src: url('/OldEnglish.ttf') format('truetype');
+  font-family: "OldEnglish";
+  src: url('/OldEnglishRegular.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
 }
-@font-face {
-  font-family: OldEnglish;
-  src: url('/OERegularBold2.ttf') format('truetype');
+ @font-face {
+  font-family: "OldEnglish";
+  src: url('/OldEnglishBold.ttf') format('truetype');
   font-style: normal;
   font-weight: bold;
 }
 @font-face {
-  font-family: OldEnglish;
-  src: url('/OldEnglishItalic.ttf') format('truetype');
+  font-family: "OldEnglish";
+  src: url('/OldEnglishItalic2.ttf') format('truetype');
   font-style: italic;
 }
 
 @font-face {
   font-family: 'OldEnglish';
-  src: url('/OldEnglishItalicBold.ttf') format('truetype');
+  src: url('/OldEnglishBoldItalic.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
-}
+} 
 html, body {
   margin: 0; padding: 0
 }
 
 button {
-  font-family: "Roboto", Helvetica, Arial;
+  /* font-family: "Roboto", Helvetica, Arial; */
+  font-family: "OldEnglish";
   border: 1px solid #222;
   background: gray;
   color: white;
   padding: 5px 10px;
   cursor: pointer;
+}
+*{
+  font-family: 'test';
 }
 
 button:active,

@@ -161,7 +161,7 @@ const TopControls = () => {
             <MdClose />
           </CtlButton>
           {/* <Box className={classes.picker}> */}
-          <>
+          {/* <>
             <Button disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false} variant="outlined" onClick={() => setShowPicker(!showPicker)}>
               <AiOutlineFontColors fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : selectedObject.fill} />
             </Button>
@@ -185,7 +185,7 @@ const TopControls = () => {
                 />
               </div>
             ) : null}
-          </>
+          </> */}
           {/* </Box> */}
         </ButtonGroup>
         <label className="myLabel">
