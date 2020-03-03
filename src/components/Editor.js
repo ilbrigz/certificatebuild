@@ -27,9 +27,9 @@ export default function Editor(props) {
         <>
             <TopControls />
             <div style={{ display: 'flex' }}>
-                <Paper square elevation={3}>
-                    <Canvas />
-                </Paper>
+                {/* <Paper square elevation={3}> */}
+                <div>   <Canvas /></div>
+                {/* </Paper> */}
                 <Jexcel />
             </div>
             <BottomControls />
