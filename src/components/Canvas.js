@@ -32,7 +32,7 @@ const Canvas = () => {
       fabricRef.current = canvas;
       console.log(fabricRef);
       //fabric events
-      fabricRef.current.on('object:moving', preventOutsideMovement);
+      // fabricRef.current.on('object:moving', preventOutsideMovement);
       fabricRef.current.on('selection:created', (e) => {
         setSelectedObject(e.target);
       });
