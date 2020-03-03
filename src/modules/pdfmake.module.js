@@ -33,17 +33,27 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
     maxHeight: fabricRef.current.height,
     quality: 1,
   });
+  // const pageBackground = {
+  //   image: image,
+  //   width: fabricRef.current.width,
+  //   height: 595,
+  //   absolutePosition: { x: 0, y: 0 },
+  // };
   const pageBackground = {
-    image: image,
+    svg: `  <svg width="400" height="180">
+    <rect x="50" y="20" width="150" height="150"
+    style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
+  </svg>`,
     width: fabricRef.current.width,
     height: 595,
     absolutePosition: { x: 0, y: 0 },
   };
 
+
   const jsonCanvas = fabricRef.current.toObject();
   const headers = jexcelRef.current.getHeaders().split(',');
   const filteredData = jexcelRef.current.getData().filter((a) =>
-    a.some(function(x) {
+    a.some(function (x) {
       return x;
     })
   );
@@ -110,9 +120,9 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
         ...(objects[i].textAlign === 'center'
           ? centeredTextProperties(objects[i], fabricRef.current.width)
           : leftOrRightAlignedTextProperties(
-              objects[i],
-              fabricRef.current.width
-            )),
+            objects[i],
+            fabricRef.current.width
+          )),
         ...(objects[i].underline && { decoration: 'underline' }),
         ...(objects[i].fontStyle === 'italic' && { italics: true }),
         ...(objects[i].fontWeight === 'bold' && { bold: true }),

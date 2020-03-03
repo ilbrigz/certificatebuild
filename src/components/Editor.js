@@ -1,8 +1,10 @@
 import React, { useRef, } from 'react';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Paper } from '@material-ui/core'
 
-import Controls from './controls/Controls';
+import TopControls from './controls/TopControls';
+import BottomControls from './controls/BottomControls';
 import Canvas from './Canvas'
 import '../App.css';
 
@@ -23,13 +25,14 @@ export default function Editor(props) {
 
     return (
         <>
-            <Controls />
+            <TopControls />
             <div style={{ display: 'flex' }}>
-                <div>
+                <Paper square elevation={3}>
                     <Canvas />
-                </div>
+                </Paper>
                 <Jexcel />
             </div>
+            <BottomControls />
         </>
     );
 }
