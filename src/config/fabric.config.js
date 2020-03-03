@@ -49,6 +49,7 @@ export const fabricItextOptions = {
   top: 0,
   fontFamily: 'Roboto',
   hasControls: true,
+  hasRotatingPoint: false,
 };
 
 export const fabricTextboxOptions = {
