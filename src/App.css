@@ -27,16 +27,12 @@ html, body {
 }
 
 button {
-  /* font-family: "Roboto", Helvetica, Arial; */
-  font-family: "OldEnglish";
+  font-family: "Roboto", Helvetica, Arial;
   border: 1px solid #222;
   background: gray;
   color: white;
   padding: 5px 10px;
   cursor: pointer;
-}
-*{
-  font-family: 'test';
 }
 
 button:active,

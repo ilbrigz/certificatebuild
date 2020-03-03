@@ -60,4 +60,5 @@ export const fabricTextboxOptions = {
   padding: 0,
   textAlign: 'center',
   fontFamily: 'Roboto',
+  hasRotatingPoint: false,
 };

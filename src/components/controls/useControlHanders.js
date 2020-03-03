@@ -65,6 +65,7 @@ const useControlHandlers = () => {
                     opacity: 1,
                     cornerSize: 12,
                     hasControls: true,
+                    hasRotatingPoint: false,
                 });
 
                 var cw = fabricRef.current.width;
