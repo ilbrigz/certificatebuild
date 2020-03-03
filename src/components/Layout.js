@@ -26,9 +26,9 @@ export default function Layout() {
         <div style={{ backgroundColor: '#393e46', minHeight: "100vh" }}>
             <ThemeProvider theme={theme}>
                 <Header />
-                <Container fixed className={classes.container}>
-                    <Editor />
-                </Container>
+                {/* <Container fixed className={classes.container}> */}
+                <div><Editor /></div>
+                {/* </Container> */}
             </ThemeProvider>
         </div>
     )
