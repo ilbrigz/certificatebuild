@@ -68,7 +68,7 @@ const useControlHandlers = () => {
                     cornerSize: 12,
                     hasControls: true,
                 });
-                text.hasRotatingPoint = false;
+                imageinstance.hasRotatingPoint = false;
 
                 var cw = fabricRef.current.width;
                 var ch = fabricRef.current.height;
