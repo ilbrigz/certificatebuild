@@ -25,7 +25,6 @@ const useControlHandlers = () => {
                 left: (fabricRef.current.width / 5) * Math.random(),
             });
             text.setControlsVisibility(fabricTextControlOptions);
-            text.hasRotatingPoint = false;
         } else {
             text = new fabric.Textbox(
                 'This is a textbox. You can dobble click me to start editing or expand me to your liking.',
@@ -36,7 +35,6 @@ const useControlHandlers = () => {
                 }
             );
             text.setControlsVisibility(fabricTextboxControlOptions);
-            text.hasRotatingPoint = false;
         }
         fabricRef.current.add(text);
     };
@@ -68,7 +66,7 @@ const useControlHandlers = () => {
                     cornerSize: 12,
                     hasControls: true,
                 });
-                imageinstance.hasRotatingPoint = false;
+                imageinstance.setControlsVisibility({ mtr: false });
 
                 var cw = fabricRef.current.width;
                 var ch = fabricRef.current.height;

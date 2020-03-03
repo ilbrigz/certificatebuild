@@ -20,6 +20,7 @@ export const fabricTextboxControlOptions = {
   br: false,
   tr: false,
   mt: false,
+  mtr: false //the rotating point (defaut: true)
 };
 export const fabricTextControlOptions = {
   mb: false,
@@ -30,6 +31,7 @@ export const fabricTextControlOptions = {
   br: false,
   tr: false,
   mt: false,
+  mtr: false//the rotating point (defaut: true)
 };
 
 export const fabricTextOptions = {
