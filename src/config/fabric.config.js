@@ -49,7 +49,6 @@ export const fabricItextOptions = {
   top: 0,
   fontFamily: 'Roboto',
   hasControls: true,
-  hasRotatingPoint: false,
 };
 
 export const fabricTextboxOptions = {
@@ -61,5 +60,4 @@ export const fabricTextboxOptions = {
   padding: 0,
   textAlign: 'center',
   fontFamily: 'Roboto',
-  hasRotatingPoint: false,
 };
