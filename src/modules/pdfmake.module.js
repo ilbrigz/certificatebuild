@@ -40,9 +40,9 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
   //   absolutePosition: { x: 0, y: 0 },
   // };
   const pageBackground = {
-    svg: `  <svg width="400" height="180">
-    <rect x="50" y="20" width="150" height="150"
-    style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
+    svg: ` <svg>
+    <rect x="50" y="20" width="550" height="550"
+    style="fill:white;stroke:black;stroke-width:5;stroke-opacity:1" />
   </svg>`,
     width: fabricRef.current.width,
     height: 595,

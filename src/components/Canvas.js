@@ -103,7 +103,7 @@ const Canvas = () => {
 
       //testing
       fabric.loadSVGFromString(`<svg width="400" height="180">
-      <rect x="50" y="20" width="150" height="150"
+      <rect x="50" y="20" width="550" height="550"
       style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
     </svg>`, function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
@@ -153,12 +153,12 @@ const Canvas = () => {
 
       // changing all the fonts
 
-      // let obj = fabricRef.current._objects.filter((o) => {
-      //   return o.type === 'text' || o.type === 'textbox' || o.type === 'i-text';
-      // });
-      // obj.forEach(function (item, i) {
-      //   item.set('fontFamily', 'OldEnglish');
-      // });
+      let obj = fabricRef.current._objects.filter((o) => {
+        return o.type === 'text' || o.type === 'textbox' || o.type === 'i-text';
+      });
+      obj.forEach(function (item, i) {
+        item.set('fontFamily', 'OldEnglish');
+      });
 
       fabricRef.current.requestRenderAll();
     });
