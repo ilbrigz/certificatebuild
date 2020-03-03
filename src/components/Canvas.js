@@ -8,8 +8,9 @@ import {
   fabricTextOptions,
 } from '../config/fabric.config';
 
-import 'fabric-customise-controls';
+// import 'fabric-customise-controls';
 import { preventOutsideMovement } from '../utilty/canvass_helper.js';
+console.log(window)
 const Canvas = () => {
   const { fabricRef, setSelectedObject, selectedObject } = React.useContext(
     AppContext
@@ -118,35 +119,36 @@ const Canvas = () => {
 
     fabricRef.current.add(text2, text);
 
-    //fabric control cusomize
-    // fabric.Canvas.prototype.customiseControls({
-    //   tl: {
-    //     cursor: 'pointer',
-    //     action: (e, target) => {
-    //       console.log(target);
-    //       fabricRef.current.remove(target);
-    //       fabricRef.current.requestRenderAll();
-    //     },
-    //   },
-    // });
+    require('fabric-customise-controls')
+    // fabric control cusomize
+    fabric.Canvas.prototype.customiseControls({
+      tl: {
+        cursor: 'pointer',
+        action: (e, target) => {
+          console.log(target);
+          fabricRef.current.remove(target);
+          fabricRef.current.requestRenderAll();
+        },
+      },
+    });
 
-    // fabric.Object.prototype.customiseCornerIcons(
-    //   {
-    //     settings: {
-    //       cornerShape: 'circle',
-    //       cornerBackgroundColor: 'orange',
-    //     },
-    //     tl: {
-    //       icon: '/close.svg',
-    //       settings: {
-    //         cornerBackgroundColor: 'white',
-    //       },
-    //     },
-    //   },
-    //   function () {
-    //     fabricRef.current.renderAll();
-    //   }
-    // );
+    fabric.Object.prototype.customiseCornerIcons(
+      {
+        settings: {
+          cornerShape: 'circle',
+          cornerBackgroundColor: 'orange',
+        },
+        tl: {
+          icon: '/close.svg',
+          settings: {
+            cornerBackgroundColor: 'white',
+          },
+        },
+      },
+      function () {
+        fabricRef.current.renderAll();
+      }
+    );
 
     // changing all the fonts
 
