@@ -14,7 +14,7 @@ const Notes = () => {
                     <Typography variant="body2" gutterBottom>Deleting a placeholder will also delete a column above or vice versa.</Typography>
                 </Box>
                 <Box m={2}>
-                    <Typography variant="subtitle2" >Column Header can be deleted or renamed by right clicking the column header.</Typography>
+                    <Typography variant="subtitle2" >"Column Header and its Placeholder can be deleted or renamed by right clicking the column header."</Typography>
                     <Typography variant="body2" gutterBottom>Renaming the header will reflect in the placeholder. Handy if you want to preview your data.</Typography>
                 </Box>
                 <Box m={2}>

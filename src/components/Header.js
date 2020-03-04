@@ -25,12 +25,12 @@ export default function DenseAppBar() {
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar variant="dense" className={classes.toolBar}>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                    {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MdMenu />
                     </IconButton>
-                    <Typography variant="h6" color="inherit">
-                        Photos
-          </Typography>
+                    <Typography variant="h6" color="inherit"> */}
+                    {/* Photos */}
+                    {/* </Typography> */}
                 </Toolbar>
             </AppBar>
         </div>
