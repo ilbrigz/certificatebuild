@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
-import Button from '@material-ui/core/Button';
+import { Button, ButtonGroup } from '@material-ui/core';
 
 import { AiOutlineFontSize } from 'react-icons/ai';
 import { AppContext } from '../../context';
@@ -36,26 +36,30 @@ const BottomControls = () => {
         effect="solid"
         clickable={true}
       >
-        <Button variant="outlined" onClick={insertText}>
-          TEXT
+        <ButtonGroup>
+          <Button variant="contained" size="small" onClick={insertText}>
+            TEXT
         </Button>
-        <Button variant="outlined" onClick={insertText}>
-          TEXTBOX
+          <Button variant="contained" size="small" onClick={insertText}>
+            TEXTBOX
         </Button>
+        </ButtonGroup>
       </ReactTooltip>
+      <Button variant="contained"
+        color="primary" onClick={onGeneratePdf}>
+        download
+      </Button>
 
-      <Button variant="outlined" variant="outlined">
+      {/* <Button variant="outlined" variant="outlined">
         test
       </Button>
       <Button variant="outlined" onClick={logCanvas}>
         LOG JSON
       </Button>
-      <Button variant="outlined" onClick={onGeneratePdf}>
-        download
-      </Button>
+  
       <Button variant="outlined" onClick={testing}>
         testing
-      </Button>
+      </Button> */}
     </>
   );
 };

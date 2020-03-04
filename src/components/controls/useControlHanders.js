@@ -12,6 +12,7 @@ import {
 
 import { readAndCompressImage } from 'browser-image-resizer';
 
+
 const useControlHandlers = () => {
     const { fabricRef, jexcelRef, setSelectedObject, selectedObject } = useContext(AppContext)
 
@@ -207,8 +208,27 @@ const useControlHandlers = () => {
         const activeEl = fabricRef.current.getActiveObject();
         if (activeEl) {
             if (activeEl.type === 'activeSelection') {
-                activeEl._objects.forEach((i) => fabricRef.current.remove(i));
+                activeEl._objects.forEach((i) => {
+                    if (i.type === 'text') {
+                        const headers = jexcelRef.current.getHeaders().split(',');
+                        if (headers.length === 1) { alert('1 column must remain'); return }
+                        headers.map((item, idx) => {
+                            if (item === i.text.substring(2, i.text.length - 2)) jexcelRef.current.deleteColumn(idx)
+                            return;
+                        })
+                    }
+                    fabricRef.current.remove(i)
+
+                });
                 return;
+            }
+            if (activeEl.type === 'text') {
+                const headers = jexcelRef.current.getHeaders().split(',');
+                if (headers.length === 1) { alert('1 column must remain'); return }
+                headers.map((item, idx) => {
+                    if (item === activeEl.text.substring(2, activeEl.text.length - 2)) jexcelRef.current.deleteColumn(idx)
+                    return;
+                })
             }
             fabricRef.current.remove(activeEl);
         }
@@ -221,7 +241,7 @@ const useControlHandlers = () => {
             console.log(activeEl);
             return;
         }
-        console.log(fabricRef.current.toDatalessJSON());
+        console.log(fabricRef.current.toJSON());
         // console.log(JSON.stringify( fabric));
     };
 

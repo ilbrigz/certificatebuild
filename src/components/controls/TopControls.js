@@ -6,6 +6,7 @@ import { CompactPicker } from 'react-color';
 import { NativeSelect, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 
+
 import CtlButton from '../common/CtlButton';
 
 import {
@@ -154,40 +155,42 @@ const TopControls = () => {
             <FaSortNumericDown />
           </CtlButton>
           <CtlButton
-            variant="outlined"
+            variant="contained"
+            color="secondary"
             onClick={onRemove}
             data-tip="Delete Selected Item"
           >
-            <MdClose />
+            <MdClose fill="white" />
           </CtlButton>
           {/* <Box className={classes.picker}> */}
-          {/* <>
-            <Button disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false} variant="outlined" onClick={() => setShowPicker(!showPicker)}>
-              <AiOutlineFontColors fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : selectedObject.fill} />
-            </Button>
-            {showPicker ? (
-              <div
-                style={{ position: 'absolute', zIndex: 999, top: 0, left: '100%' }}
-              >
-                <div
-                  onClick={() => setShowPicker(false)}
-                  style={{
-                    position: 'fixed',
-                    top: '0px',
-                    right: '0px',
-                    bottom: '0px',
-                    left: '0px',
-                  }}
-                ></div>
-                <CompactPicker
-                  color={selectedObject.fill || '#000000'}
-                  onChangeComplete={onColorChange}
-                />
-              </div>
-            ) : null}
-          </> */}
+
           {/* </Box> */}
         </ButtonGroup>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <Button disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false} variant="outlined" onClick={() => setShowPicker(!showPicker)}>
+            <AiOutlineFontColors fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : selectedObject.fill} />
+          </Button>
+          {showPicker ? (
+            <div
+              style={{ position: 'absolute', zIndex: 999, top: 0, left: '100%' }}
+            >
+              <div
+                onClick={() => setShowPicker(false)}
+                style={{
+                  position: 'fixed',
+                  top: '0px',
+                  right: '0px',
+                  bottom: '0px',
+                  left: '0px',
+                }}
+              ></div>
+              <CompactPicker
+                color={selectedObject.fill || '#000000'}
+                onChangeComplete={onColorChange}
+              />
+            </div>
+          ) : null}
+        </div>
         <label className="myLabel">
           <span>
             <AiOutlineFontSize fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : "inherit"} />
@@ -209,12 +212,12 @@ const TopControls = () => {
           <FaFont fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : "inherit"} />
           <NativeSelect
             disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false}
-            value={20}
-            onChange={() => { }}
-            name="age"
-            inputProps={{ 'aria-label': 'age' }} >
-            <option value={10}>Ten</option>
-            <option value={20}>Twenty</option>
+            value={selectedObject.fontFamily}
+            onChange={(e) => { setFabricProperty('fontFamily', e.target.value) }}
+            name="font family"
+            inputProps={{ 'aria-label': 'font family' }} >
+            <option value={'Roboto'}>Roboto</option>
+            <option value={'OldEnglish'}>Old English</option>
             <option value={30}>Thirty</option>
           </NativeSelect>
         </>

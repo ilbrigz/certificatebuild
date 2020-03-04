@@ -38,7 +38,6 @@ export const fabricTextOptions = {
   left: 0,
   fontSize: 30,
   textAlign: 'center',
-  hasRotatingPoint: false,
   fontFamily: 'Roboto',
   top: 0,
   cornerStrokeColor: 'red',

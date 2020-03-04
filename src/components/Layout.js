@@ -4,10 +4,19 @@ import Container from '@material-ui/core/Container';
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Header from './Header'
 
+
 const theme = createMuiTheme({
-    // palette: {
-    //     type: 'dark',
-    // },
+    palette: {
+        primary: {
+            main: '#00adb5',
+        },
+        secondary: {
+            light: '#ff7961',
+            main: '#f44336',
+            dark: '#ba000d',
+            contrastText: '#000',
+        },
+    },
 });
 
 const useStyles = makeStyles(theme => ({
@@ -29,6 +38,10 @@ export default function Layout() {
                 <Container fixed className={classes.container}>
                     <div><Editor /></div>
                 </Container>
+                <div style={{ fontFamily: 'OldEnglish' }}>&nbsp;</div>
+                <div style={{ fontFamily: 'OldEnglish', fontWeight: 'bold' }}>&nbsp;</div>
+                <div style={{ fontFamily: 'OldEnglish', fontWeight: 'bold', fontStyle: 'italic' }}>&nbsp;</div>
+                <div style={{ fontFamily: 'OldEnglish', fontStyle: 'italic' }}>&nbsp;</div>
             </ThemeProvider>
         </div>
     )

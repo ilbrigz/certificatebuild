@@ -40,13 +40,11 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
   //   absolutePosition: { x: 0, y: 0 },
   // };
   const pageBackground = {
-    svg: ` <svg>
-    <rect x="50" y="20" width="550" height="550"
-    style="fill:white;stroke:black;stroke-width:5;stroke-opacity:1" />
+    svg: `<svg>
+    <rect y="2" x="2" width="${fabricRef.current.width - 2 * 24}" height="${fabricRef.current.height - 2 * 24}"
+    style="fill:white;stroke:black;stroke-width:5;fill-opacity:1;stroke-opacity:0.9" />
   </svg>`,
-    width: fabricRef.current.width,
-    height: 595,
-    absolutePosition: { x: 0, y: 0 },
+    absolutePosition: { x: 22, y: 22 },
   };
 
 
@@ -62,6 +60,7 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
   const dynamicObjects = [];
 
   const { objects } = jsonCanvas;
+
 
   for (let i = 0; i < objects.length; i++) {
     if (objects[i].type === 'i-text') {
@@ -113,7 +112,6 @@ const generatePdf = async ({ fabricRef, jexcelRef }) => {
     if (objects[i].type === 'text') {
       dynamicObjects.push({
         font: objects[i].fontFamily,
-        // font: 'OldEnglish',
         text: headers.indexOf(
           objects[i].text.substring(2, objects[i].text.length - 2)
         ),

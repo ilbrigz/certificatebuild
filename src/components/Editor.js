@@ -1,11 +1,12 @@
 import React, { useRef, } from 'react';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { Paper } from '@material-ui/core'
+import { Paper, Box } from '@material-ui/core'
 
 import TopControls from './controls/TopControls';
 import BottomControls from './controls/BottomControls';
 import Canvas from './Canvas'
+import Notes from './Notes'
 import '../App.css';
 
 import Jexcel from './Jexcel'
@@ -30,7 +31,10 @@ export default function Editor(props) {
                 <Paper square elevation={3}>
                     <Canvas />
                 </Paper>
-                <Jexcel />
+                <Box m={1}>
+                    <Jexcel />
+                    <Notes />
+                </Box>
             </div>
             <BottomControls />
         </>
