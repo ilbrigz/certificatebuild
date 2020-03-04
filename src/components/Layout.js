@@ -38,10 +38,10 @@ export default function Layout() {
                 <Container fixed className={classes.container}>
                     <div><Editor /></div>
                 </Container>
-                <div style={{ fontFamily: 'OldEnglish' }}>&nbsp;</div>
+                {/* <div style={{ fontFamily: 'OldEnglish' }}>&nbsp;</div>
                 <div style={{ fontFamily: 'OldEnglish', fontWeight: 'bold' }}>&nbsp;</div>
                 <div style={{ fontFamily: 'OldEnglish', fontWeight: 'bold', fontStyle: 'italic' }}>&nbsp;</div>
-                <div style={{ fontFamily: 'OldEnglish', fontStyle: 'italic' }}>&nbsp;</div>
+                <div style={{ fontFamily: 'OldEnglish', fontStyle: 'italic' }}>&nbsp;</div> */}
             </ThemeProvider>
         </div>
     )

@@ -27,16 +27,19 @@ export default function Editor(props) {
     return (
         <>
             <TopControls />
-            <div style={{ display: 'flex' }}>
-                <Paper square elevation={3}>
-                    <Canvas />
-                </Paper>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                <Box>
+                    <Paper square elevation={3}>
+                        <Canvas />
+                    </Paper>
+                    <BottomControls />
+                </Box>
+
                 <Box m={1}>
                     <Jexcel />
                     <Notes />
                 </Box>
             </div>
-            <BottomControls />
         </>
     );
 }
