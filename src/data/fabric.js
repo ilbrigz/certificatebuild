@@ -224,7 +224,7 @@ export default {
       "transformMatrix": null,
       "skewX": 0,
       "skewY": 0,
-      "text": "Kagawaran ng Edukasyon",
+      "text": "Department of Edukasyon",
       "fontSize": "10.5",
       "fontWeight": "normal",
       "fontFamily": "OldEnglish",
