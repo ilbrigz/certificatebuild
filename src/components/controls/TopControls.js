@@ -3,9 +3,8 @@ import ReactTooltip from 'react-tooltip';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { CompactPicker } from 'react-color';
-import { NativeSelect, Box } from '@material-ui/core'
+import { NativeSelect, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
 
 import CtlButton from '../common/CtlButton';
 
@@ -30,22 +29,20 @@ import { AiOutlineFontColors } from 'react-icons/ai';
 import { AiOutlineFontSize } from 'react-icons/ai';
 import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
-import generatePdf from '../../modules/pdfmake.module';
+import { generatePdf } from '../../modules/pdfmake.module';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   boxStyle: {
-    display: 'inline-block'
+    display: 'inline-block',
   },
   picker: {
     display: 'inline-block',
-    position: 'relative'
-  }
-
+    position: 'relative',
+  },
 }));
 
-
 const TopControls = () => {
-  const classes = useStyles()
+  const classes = useStyles();
   const [showPicker, setShowPicker] = useState(false);
   const { selectedObject, fabricRef, jexcelRef } = React.useContext(AppContext);
   const {
@@ -66,7 +63,13 @@ const TopControls = () => {
   return (
     <>
       <div style={{ minHeight: '31px' }}>
-        <ButtonGroup disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false}>
+        <ButtonGroup
+          disabled={
+            !selectedObject.type || selectedObject.type === 'image'
+              ? true
+              : false
+          }
+        >
           <CtlButton
             variant="outlined"
             data-tip="Text Align Left"
@@ -92,7 +95,13 @@ const TopControls = () => {
             <FaAlignRight />
           </CtlButton>
         </ButtonGroup>
-        <ButtonGroup disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false}>
+        <ButtonGroup
+          disabled={
+            !selectedObject.type || selectedObject.type === 'image'
+              ? true
+              : false
+          }
+        >
           <CtlButton
             variant="outlined"
             onClick={() => {
@@ -116,7 +125,11 @@ const TopControls = () => {
           <CtlButton
             variant="outlined"
             onClick={() => {
-              toggleProperty('underline');
+              toggleProperty('underline', null, null, {
+                styleName: 'textDecoration',
+                styleValue: 'underline',
+                altValue: '',
+              });
             }}
             isactive={selectedObject.underline ? 1 : 0}
             data-tip="Underline Text"
@@ -167,12 +180,31 @@ const TopControls = () => {
           {/* </Box> */}
         </ButtonGroup>
         <div style={{ position: 'relative', display: 'inline-block' }}>
-          <Button disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false} variant="outlined" onClick={() => setShowPicker(!showPicker)}>
-            <AiOutlineFontColors fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : selectedObject.fill} />
+          <Button
+            disabled={
+              !selectedObject.type || selectedObject.type === 'image'
+                ? true
+                : false
+            }
+            variant="outlined"
+            onClick={() => setShowPicker(!showPicker)}
+          >
+            <AiOutlineFontColors
+              fill={
+                !selectedObject.type || selectedObject.type === 'image'
+                  ? 'gray'
+                  : selectedObject.fill
+              }
+            />
           </Button>
           {showPicker ? (
             <div
-              style={{ position: 'absolute', zIndex: 999, top: 0, left: '100%' }}
+              style={{
+                position: 'absolute',
+                zIndex: 999,
+                top: 0,
+                left: '100%',
+              }}
             >
               <div
                 onClick={() => setShowPicker(false)}
@@ -193,29 +225,52 @@ const TopControls = () => {
         </div>
         <label className="myLabel">
           <span>
-            <AiOutlineFontSize fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : "inherit"} />
+            <AiOutlineFontSize
+              fill={
+                !selectedObject.type || selectedObject.type === 'image'
+                  ? 'gray'
+                  : 'inherit'
+              }
+            />
           </span>
           <input
             type="number"
             name="quantity"
             defaultValue={selectedObject.fontSize || 30}
             key={selectedObject.fontSize || 30}
-            style={{ color: (!selectedObject.type || selectedObject.type === 'image') ? 'gray' : "inherit" }}
-            min="10"
+            style={{
+              color:
+                !selectedObject.type || selectedObject.type === 'image'
+                  ? 'gray'
+                  : 'inherit',
+            }}
+            min="7"
             max="80"
-            onChange={onSetFontSize}
+            onChange={(e) => onSetFontSize(e)}
           />
-
         </label>
         {/* <Box className={classes.boxStyle}> */}
         <>
-          <FaFont fill={(!selectedObject.type || selectedObject.type === 'image') ? 'gray' : "inherit"} />
+          <FaFont
+            fill={
+              !selectedObject.type || selectedObject.type === 'image'
+                ? 'gray'
+                : 'inherit'
+            }
+          />
           <NativeSelect
-            disabled={(!selectedObject.type || selectedObject.type === 'image') ? true : false}
+            disabled={
+              !selectedObject.type || selectedObject.type === 'image'
+                ? true
+                : false
+            }
             value={selectedObject.fontFamily}
-            onChange={(e) => { setFabricProperty('fontFamily', e.target.value) }}
+            onChange={(e) => {
+              setFabricProperty('fontFamily', e.target.value);
+            }}
             name="font family"
-            inputProps={{ 'aria-label': 'font family' }} >
+            inputProps={{ 'aria-label': 'font family' }}
+          >
             <option value={'Roboto'}>Roboto</option>
             <option value={'OldEnglish'}>Old English</option>
             <option value={30}>Thirty</option>
@@ -224,7 +279,6 @@ const TopControls = () => {
         {/* </Box> */}
 
         <ReactTooltip />
-
       </div>
     </>
   );

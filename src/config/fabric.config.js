@@ -7,31 +7,31 @@ export const fabricOptionsOveride = {
   padding: 0,
   borderDashArray: [3, 3],
   hasControls: false,
-  hasRotatingPoint: false,
+  // hasRotatingPoint: false,
   fontFamily: 'Roboto',
 };
 
 export const fabricTextboxControlOptions = {
-  mb: false,
-  ml: true,
-  mr: true,
-  tl: false,
-  bl: false,
-  br: false,
-  tr: false,
-  mt: false,
-  mtr: false //the rotating point (defaut: true)
+  // mb: false,
+  // ml: true,
+  // mr: true,
+  // tl: false,
+  // bl: false,
+  // br: false,
+  // tr: false,
+  // mt: false,
+  // mtr: false, //the rotating point (defaut: true)
 };
 export const fabricTextControlOptions = {
-  mb: false,
-  ml: false,
-  mr: false,
-  tl: false,
-  bl: false,
-  br: false,
-  tr: false,
-  mt: false,
-  mtr: false//the rotating point (defaut: true)
+  // mb: false,
+  // ml: false,
+  // mr: false,
+  // tl: false,
+  // bl: false,
+  // br: false,
+  // tr: false,
+  // mt: false,
+  // mtr: false, //the rotating point (defaut: true)
 };
 
 export const fabricTextOptions = {

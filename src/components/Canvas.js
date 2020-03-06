@@ -18,6 +18,31 @@ const Canvas = () => {
     AppContext
   );
   const canvasRef = React.useRef(null);
+
+  const handleUserKeyPress = React.useCallback((event) => {
+    const { key, keyCode } = event;
+    console.log(key);
+    switch (key) {
+      case 'Escape':
+        fabricRef.current.discardActiveObject();
+        fabricRef.current.renderAll();
+        break;
+      case 'ArrowUp':
+        const activeEl = fabricRef.current.getActiveObject();
+        if (activeEl.top < 1) {
+          return;
+        }
+        activeEl.top = activeEl.top - 2;
+        fabricRef.current.renderAll();
+        break;
+      default:
+        console.log(keyCode);
+    }
+
+    if (keyCode >= 65 && keyCode <= 90) {
+    }
+  }, []);
+
   React.useEffect(() => {
     const canvas = new fabric.Canvas('canvas', {
       objectCaching: false,
@@ -30,11 +55,31 @@ const Canvas = () => {
       allowTouchScrolling: true,
     });
     fabricRef.current = canvas;
-    fabricRef.current.loadFromJSON(data);
+    // fabricRef.current.loadFromJSON(data);
+    fabricRef.current.add(
+      new fabric.IText('hello\nworld', {
+        left: 50,
+        top: 50,
+        fontFamily: 'Helvetica',
+        fill: '#333',
+        lineHeight: 1.1,
+        styles: {
+          0: {
+            0: { textDecoration: 'underline', fontSize: 80 },
+            1: { textBackgroundColor: 'red' },
+          },
+          1: {
+            0: { textBackgroundColor: 'rgba(0,255,0,0.5)' },
+            4: { fontSize: 20 },
+          },
+        },
+      })
+    );
     //fabric events
     fabricRef.current.on('object:moving', preventOutsideMovement);
     fabricRef.current.on('selection:created', (e) => {
       setSelectedObject(e.target);
+      window.addEventListener('keydown', handleUserKeyPress);
     });
     if (!fabricRef.current) return;
     fabricRef.current.on('selection:created', (e) => {
@@ -45,6 +90,7 @@ const Canvas = () => {
     });
     fabricRef.current.on('selection:cleared', () => {
       setSelectedObject({});
+      window.removeEventListener('keydown', handleUserKeyPress);
     });
 
     fabricRef.current.on('object:scaling', function onObjectScaled(e) {
@@ -74,32 +120,31 @@ const Canvas = () => {
     fabric.Object.prototype.set(fabricOptionsOveride);
 
     //testing
-    fabric.loadSVGFromString(
-      `<svg>
-      <rect width="${fabricRef.current.width - 2 * 24}" height="${fabricRef
-        .current.height -
-        2 * 24}"
-      style="fill:white;stroke:black;stroke-width:5;fill-opacity:1;stroke-opacity:0.9" />
-    </svg>`,
-      function(objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        fabricRef.current.setBackgroundImage(
-          obj,
-          fabricRef.current.renderAll.bind(fabricRef.current),
-          {
-            top: 24 - 2,
-            left: 24 - 2,
-          }
-        );
-      }
-    );
+    // fabric.loadSVGFromString(
+    //   `<svg>
+    //   <rect width="${fabricRef.current.width - 2 * 24}" height="${fabricRef
+    //     .current.height -
+    //     2 * 24}"
+    //   style="fill:white;stroke:black;stroke-width:5;fill-opacity:1;stroke-opacity:0.9" />
+    // </svg>`,
+    //   function(objects, options) {
+    //     var obj = fabric.util.groupSVGElements(objects, options);
+    //     fabricRef.current.setBackgroundImage(
+    //       obj,
+    //       fabricRef.current.renderAll.bind(fabricRef.current),
+    //       {
+    //         top: 24 - 2,
+    //         left: 24 - 2,
+    //       }
+    //     );
+    //   }
+    // );
 
     // changing all the fonts
 
     let obj = fabricRef.current._objects.filter((o) => {
       return o.type === 'text' || o.type === 'textbox' || o.type === 'i-text';
     });
-    console.log(obj);
     obj.forEach(function(item, i) {
       var myfont = new FontFaceObserver(item.fontFamily, {
         weight: item.fontWeight,
@@ -117,17 +162,19 @@ const Canvas = () => {
             br: false,
             tr: false,
             mt: false,
-            mtr: false, //the rotating point (defaut: true)
+            // mtr: false, //the rotating point (defaut: true)
           });
         }
         item._forceClearCache = true;
         fabricRef.current.renderAll();
       });
     });
+
     return () => {
       fabricRef.current.removeListeners();
       fabricRef.current.dispose();
       fabricRef.current = null;
+      window.removeEventListener('keydown', handleUserKeyPress);
     };
   }, []);
 
