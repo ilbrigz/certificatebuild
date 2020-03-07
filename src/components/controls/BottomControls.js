@@ -4,7 +4,7 @@ import { Button, ButtonGroup } from '@material-ui/core';
 
 import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
-import { generatePdf, generatePdfUsingSvg } from '../../modules/pdfmake.module';
+import { generatePdf, downloadPdf, previewPdf } from '../../modules/pdfmake.module';
 
 const BottomControls = () => {
   const { selectedObject, fabricRef, jexcelRef } = React.useContext(AppContext);
@@ -46,22 +46,24 @@ const BottomControls = () => {
       </ReactTooltip>
       <Button
         variant="contained"
+        color="secondary"
+        onClick={() => {
+          downloadPdf({ fabricRef, jexcelRef });
+        }}
+      >
+        download
+      </Button>
+      <Button
+        variant="contained"
         color="primary"
         onClick={() => {
-          generatePdf({ fabricRef, jexcelRef });
+          previewPdf({ fabricRef, jexcelRef });
         }}
       >
         download
       </Button>
 
-      <Button
-        variant="outlined"
-        onClick={() => generatePdfUsingSvg({ fabricRef, jexcelRef })}
-        variant="outlined"
-      >
-        GenerateBySVG
-      </Button>
-      <Button variant="outlined" onClick={logCanvas}>
+      {/* <Button variant="outlined" onClick={logCanvas}>
         LOG JSON
       </Button>
 
@@ -72,7 +74,7 @@ const BottomControls = () => {
         }}
       >
         testing
-      </Button>
+      </Button> */}
     </>
   );
 };
