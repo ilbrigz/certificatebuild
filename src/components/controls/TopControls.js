@@ -29,7 +29,6 @@ import { AiOutlineFontColors } from 'react-icons/ai';
 import { AiOutlineFontSize } from 'react-icons/ai';
 import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
-import { generatePdf } from '../../modules/pdfmake.module';
 
 const useStyles = makeStyles((theme) => ({
   boxStyle: {
@@ -57,9 +56,6 @@ const TopControls = () => {
     onColorChange,
   } = useControlHanders();
 
-  const onGeneratePdf = () => {
-    generatePdf({ fabricRef, jexcelRef });
-  };
   return (
     <>
       <div style={{ minHeight: '31px' }}>

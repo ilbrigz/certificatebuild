@@ -91,31 +91,33 @@ export const generatePdfUsingSvg = async ({ fabricRef, jexcelRef }) => {
     });
   });
 
-  const docDefinition = cloneDeep({
-    pageOrientation: 'landscape',
-    pageMargins: 0,
-    content: pdfContents,
-  });
 
   // pdfMake.createPdf(docDefinition, null, null, vfs).open();
 
   fabricRef.current.loadFromJSON(screenShot)
-  return pdfMake.createPdf(docDefinition);
+  return {
+    pageOrientation: 'landscape',
+    pageMargins: 0,
+    content: pdfContents,
+  }
+
+  // console.log(pdf)
+  // return pdf;
   // obj.forEach((i, idx) => {
   //   i.text = '[[' + mapping[idx] + ']]';
   //   fabricRef.current.requestRenderAll();
   // });
 };
 
-export const previewPdf = (args) => {
-  const pdf = generatePdfUsingSvg(args)
+export const previewPdf = async (args) => {
+  const pdfDefinition = cloneDeep(await generatePdfUsingSvg(args))
   var win = window.open('', '_blank');
-  pdf.open({}, win);
+  pdfMake.createPdf(pdfDefinition).open({}, win);
 }
 
-export const downloadPdf = (args) => {
-  const pdf = generatePdfUsingSvg(args)
-  var win = window.download();
+export const downloadPdf = async (args) => {
+  const pdfDefinition = cloneDeep(await generatePdfUsingSvg(args))
+  pdfMake.createPdf(pdfDefinition).download();
 }
 
 

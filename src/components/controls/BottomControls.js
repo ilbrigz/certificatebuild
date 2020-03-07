@@ -4,15 +4,12 @@ import { Button, ButtonGroup } from '@material-ui/core';
 
 import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
-import { generatePdf, downloadPdf, previewPdf } from '../../modules/pdfmake.module';
+import { downloadPdf, previewPdf } from '../../modules/pdfmake.module';
 
 const BottomControls = () => {
-  const { selectedObject, fabricRef, jexcelRef } = React.useContext(AppContext);
+  const { fabricRef, jexcelRef } = React.useContext(AppContext);
   const { insertText, onImageUpload, logCanvas, testing } = useControlHanders();
 
-  const onGeneratePdf = () => {
-    generatePdf({ fabricRef, jexcelRef });
-  };
   return (
     <>
       <label className="myLabel">
@@ -46,18 +43,17 @@ const BottomControls = () => {
       </ReactTooltip>
       <Button
         variant="contained"
-        color="secondary"
         onClick={() => {
-          downloadPdf({ fabricRef, jexcelRef });
+          previewPdf({ fabricRef, jexcelRef });
         }}
       >
-        download
+        PreviewPdf
       </Button>
       <Button
         variant="contained"
         color="primary"
         onClick={() => {
-          previewPdf({ fabricRef, jexcelRef });
+          downloadPdf({ fabricRef, jexcelRef });
         }}
       >
         download
