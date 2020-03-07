@@ -57,18 +57,18 @@ const useControlHandlers = () => {
 
     const readerobj = new FileReader();
 
-    readerobj.onload = function() {
+    readerobj.onload = function () {
       var imgElement = document.createElement('img');
       imgElement.src = readerobj.result;
 
-      imgElement.onload = function() {
+      imgElement.onload = function () {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,
           cornerSize: 12,
           hasControls: true,
         });
-        imageinstance.setControlsVisibility({ mtr: false });
+        // imageinstance.setControlsVisibility({ mtr: false });
 
         var cw = fabricRef.current.width;
         var ch = fabricRef.current.height;
@@ -300,7 +300,7 @@ const useControlHandlers = () => {
 
   const testing = () => {
     let obj = fabricRef.current.getObjects();
-    obj.forEach(function(item, i) {
+    obj.forEach(function (item, i) {
       item.text = 'hello';
     });
     fabricRef.current.renderAll();

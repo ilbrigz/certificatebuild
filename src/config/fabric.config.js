@@ -6,7 +6,6 @@ export const fabricOptionsOveride = {
   cornerSize: 12,
   padding: 0,
   borderDashArray: [3, 3],
-  hasControls: false,
   // hasRotatingPoint: false,
   fontFamily: 'Roboto',
 };

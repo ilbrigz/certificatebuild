@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { Button, ButtonGroup } from '@material-ui/core';
 
-import { AiOutlineFontSize } from 'react-icons/ai';
 import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
 import { generatePdf, generatePdfUsingSvg } from '../../modules/pdfmake.module';
@@ -69,8 +68,7 @@ const BottomControls = () => {
       <Button
         variant="outlined"
         onClick={() => {
-          const activeEl = fabricRef.current.getActiveObject();
-          console.log(activeEl);
+          console.log(fabricRef.current.toSVG())
         }}
       >
         testing

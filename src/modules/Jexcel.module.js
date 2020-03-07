@@ -75,7 +75,7 @@ const jexcelInit = ({ fabricRef, divRef }) => {
             const modiefiedHeader =
                 '[[' + 'Col-' + randomWord + '-' + headerName + ']]';
             const text = new fabric.Text(modiefiedHeader, {
-                ...fabricTextOptions,
+                // ...fabricTextOptions,
                 top: (fabricRef.current.height / 5) * Math.random(),
                 left: (fabricRef.current.width / 5) * Math.random(),
             });

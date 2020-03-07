@@ -273,7 +273,9 @@ const TopControls = () => {
           >
             <option value={'Roboto'}>Roboto</option>
             <option value={'OldEnglish'}>Old English</option>
-            <option value={30}>Thirty</option>
+            <option value={'Courier'}>Courier</option>
+            <option value={'Times'}>Times</option>
+            <option value={'Helvetica'}>Helvetica</option>
           </NativeSelect>
         </>
         {/* </Box> */}
