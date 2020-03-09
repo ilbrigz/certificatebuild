@@ -55,8 +55,10 @@ assetsLoader.load().then(() => {
 
 export const generatePdfUsingSvg = async ({ fabricRef, jexcelRef }) => {
   const screenShot = fabricRef.current.toObject()
-
   let obj = fabricRef.current._objects.filter((o) => {
+    return o.type === 'text';
+  });
+  const objScreenShot = screenShot.objects.filter((o) => {
     return o.type === 'text';
   });
   const headers = jexcelRef.current.getHeaders().split(',');
@@ -91,10 +93,13 @@ export const generatePdfUsingSvg = async ({ fabricRef, jexcelRef }) => {
     });
   });
 
+  //reset text and text position
+  obj.forEach((i, idx) => {
+    i.text = objScreenShot[idx].text
+    i.left = objScreenShot[idx].left
+    fabricRef.current.requestRenderAll();
+  });
 
-  // pdfMake.createPdf(docDefinition, null, null, vfs).open();
-
-  fabricRef.current.loadFromJSON(screenShot)
   return {
     pageOrientation: 'landscape',
     pageMargins: 0,
@@ -121,55 +126,3 @@ export const downloadPdf = async (args) => {
 }
 
 
-export const addFabricKeyListener = (fabricRef, e) => {
-  const { key, keyCode } = e;
-  const activeEl = fabricRef.current.getActiveObject();
-  console.log(key);
-  switch (key) {
-    case 'Escape':
-      fabricRef.current.discardActiveObject();
-      fabricRef.current.renderAll();
-      break;
-    case 'ArrowUp':
-      if (activeEl.top < 1) {
-        return;
-      }
-      activeEl.top = activeEl.top - 2;
-      e.preventDefault();
-      activeEl.setCoords();
-      fabricRef.current.renderAll();
-      break;
-    case 'ArrowRight':
-      if (activeEl.left + activeEl.width > fabricRef.current.width) {
-        return;
-      }
-      e.preventDefault();
-      activeEl.left = activeEl.left + 2;
-      activeEl.setCoords();
-      fabricRef.current.renderAll();
-      break;
-    case 'ArrowDown':
-      if (activeEl.top + activeEl.height > fabricRef.current.height) {
-        return;
-      }
-      e.preventDefault();
-      activeEl.top = activeEl.top + 2;
-      activeEl.setCoords();
-      fabricRef.current.renderAll();
-      break;
-    case 'ArrowLeft':
-      if (activeEl.left < 1) {
-        return;
-      }
-      e.preventDefault();
-      activeEl.left = activeEl.left - 2;
-      activeEl.setCoords();
-      fabricRef.current.renderAll();
-      break;
-    default:
-      console.log(keyCode);
-  }
-
-  if (keyCode >= 65 && keyCode <= 90) {
-  }
-}

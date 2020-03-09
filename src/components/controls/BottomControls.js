@@ -59,10 +59,10 @@ const BottomControls = () => {
         download
       </Button>
 
-      {/* <Button variant="outlined" onClick={logCanvas}>
+      <Button variant="outlined" onClick={logCanvas}>
         LOG JSON
       </Button>
-
+      {/*
       <Button
         variant="outlined"
         onClick={() => {

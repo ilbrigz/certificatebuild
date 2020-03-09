@@ -26,6 +26,8 @@ const useControlHandlers = () => {
         ...fabricItextOptions,
         top: (fabricRef.current.height / 5) * Math.random(),
         left: (fabricRef.current.width / 5) * Math.random(),
+        scaleX: fabricRef.current.width / 842,
+        scaleY: fabricRef.current.height / 595
       });
       text.setControlsVisibility(fabricTextControlOptions);
     } else {
@@ -35,6 +37,8 @@ const useControlHandlers = () => {
           ...fabricTextboxOptions,
           top: (fabricRef.current.height / 5) * Math.random(),
           left: (fabricRef.current.width / 5) * Math.random(),
+          scaleX: fabricRef.current.width / 842,
+          scaleY: fabricRef.current.height / 595
         }
       );
       text.setControlsVisibility(fabricTextboxControlOptions);
@@ -291,11 +295,11 @@ const useControlHandlers = () => {
   const logCanvas = () => {
     const activeEl = fabricRef.current.getActiveObject();
     if (activeEl) {
+      console.log(activeEl.toSVG())
       console.log(activeEl);
       return;
     }
-    console.log(fabricRef.current.toJSON());
-    // console.log(JSON.stringify( fabric));
+    console.log(fabricRef.current.toDatalessJSON());
   };
 
   const testing = () => {
@@ -326,41 +330,4 @@ const useControlHandlers = () => {
   };
 };
 
-// function addHandler() {
-//   var el = this;
-//   if ((obj = canvas.getActiveObject())) {
-//     fn.call(el, obj);
-//     canvas.renderAll();
-//   }
-// }
-
-// function setStyle(object, styleName, value) {
-//   if (object.setSelectionStyles && object.isEditing) {
-//     var style = {};
-//     style[styleName] = value;
-//     object.setSelectionStyles(style);
-//   } else {
-//     object[styleName] = value;
-//   }
-// }
-
-function getStyle(object, styleName) {
-  return object.getSelectionStyles && object.isEditing
-    ? object.getSelectionStyles()[styleName]
-    : object[styleName];
-}
-
-// addHandler('underline', function(obj) {
-//   var isUnderline =
-//     (getStyle(obj, 'textDecoration') || '').indexOf('underline') > -1;
-//   setStyle(obj, 'textDecoration', isUnderline ? '' : 'underline');
-// });
-
-//get active object
-//check if style is present
-//get selection style
-//or get active object style
-//set selection style
-//or set object style
-//renderAll
 export default useControlHandlers;

@@ -59,6 +59,8 @@ const TopControls = () => {
   return (
     <>
       <div style={{ minHeight: '31px' }}>
+        <Button>Undo</Button>
+        <Button>Redo</Button>
         <ButtonGroup
           disabled={
             !selectedObject.type || selectedObject.type === 'image'
