@@ -3,7 +3,6 @@ import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Paper, Box } from '@material-ui/core';
 
-import TopControls from './controls/TopControls';
 import BottomControls from './controls/BottomControls';
 import Canvas from './Canvas';
 import Notes from './Notes';
@@ -23,7 +22,6 @@ export default function Editor(props) {
 
   return (
     <>
-      <TopControls />
       {/* <div style={{ display: 'flex', alignItems: 'flex-start' }}> */}
       <div>
         <Box>

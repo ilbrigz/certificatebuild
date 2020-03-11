@@ -132,11 +132,8 @@ const Canvas = () => {
           .setCoords();
       }
     });
-    const containerDim = containerRef.current.getBoundingClientRect();
     // fabricRef.current.setHeight(595);
-    fabricRef.current.setHeight(containerDim.width * (595 / 842));
     // fabricRef.current.setWidth(842);
-    fabricRef.current.setWidth(containerDim.width);
 
     fabricRef.current.renderAll();
     fabric.Object.prototype.set(fabricOptionsOveride);

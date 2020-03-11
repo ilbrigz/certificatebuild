@@ -31,8 +31,8 @@ import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
 
 const useStyles = makeStyles((theme) => ({
-  boxStyle: {
-    display: 'inline-block',
+  root: {
+    backgroundColor: '$ddeedd',
   },
   picker: {
     display: 'inline-block',
@@ -58,7 +58,7 @@ const TopControls = () => {
 
   return (
     <>
-      <div style={{ minHeight: '31px' }}>
+      <div className={classes.root} style={{ minHeight: '31px' }}>
         <Button>Undo</Button>
         <Button>Redo</Button>
         <ButtonGroup
