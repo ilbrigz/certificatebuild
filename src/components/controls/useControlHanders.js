@@ -26,8 +26,6 @@ const useControlHandlers = () => {
         ...fabricItextOptions,
         top: (fabricRef.current.height / 5) * Math.random(),
         left: (fabricRef.current.width / 5) * Math.random(),
-        scaleX: fabricRef.current.width / 842,
-        scaleY: fabricRef.current.height / 595
       });
       text.setControlsVisibility(fabricTextControlOptions);
     } else {
@@ -37,8 +35,6 @@ const useControlHandlers = () => {
           ...fabricTextboxOptions,
           top: (fabricRef.current.height / 5) * Math.random(),
           left: (fabricRef.current.width / 5) * Math.random(),
-          scaleX: fabricRef.current.width / 842,
-          scaleY: fabricRef.current.height / 595
         }
       );
       text.setControlsVisibility(fabricTextboxControlOptions);
@@ -61,18 +57,18 @@ const useControlHandlers = () => {
 
     const readerobj = new FileReader();
 
-    readerobj.onload = function () {
+    readerobj.onload = function() {
       var imgElement = document.createElement('img');
       imgElement.src = readerobj.result;
 
-      imgElement.onload = function () {
+      imgElement.onload = function() {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,
           cornerSize: 12,
           hasControls: true,
         });
-        // imageinstance.setControlsVisibility({ mtr: false });
+        imageinstance.setControlsVisibility({ mtr: false });
 
         var cw = fabricRef.current.width;
         var ch = fabricRef.current.height;
@@ -295,16 +291,16 @@ const useControlHandlers = () => {
   const logCanvas = () => {
     const activeEl = fabricRef.current.getActiveObject();
     if (activeEl) {
-      console.log(activeEl.toSVG())
       console.log(activeEl);
       return;
     }
-    console.log(fabricRef.current.toDatalessJSON());
+    console.log(fabricRef.current.toJSON());
+    // console.log(JSON.stringify( fabric));
   };
 
   const testing = () => {
     let obj = fabricRef.current.getObjects();
-    obj.forEach(function (item, i) {
+    obj.forEach(function(item, i) {
       item.text = 'hello';
     });
     fabricRef.current.renderAll();
@@ -330,4 +326,41 @@ const useControlHandlers = () => {
   };
 };
 
+// function addHandler() {
+//   var el = this;
+//   if ((obj = canvas.getActiveObject())) {
+//     fn.call(el, obj);
+//     canvas.renderAll();
+//   }
+// }
+
+// function setStyle(object, styleName, value) {
+//   if (object.setSelectionStyles && object.isEditing) {
+//     var style = {};
+//     style[styleName] = value;
+//     object.setSelectionStyles(style);
+//   } else {
+//     object[styleName] = value;
+//   }
+// }
+
+function getStyle(object, styleName) {
+  return object.getSelectionStyles && object.isEditing
+    ? object.getSelectionStyles()[styleName]
+    : object[styleName];
+}
+
+// addHandler('underline', function(obj) {
+//   var isUnderline =
+//     (getStyle(obj, 'textDecoration') || '').indexOf('underline') > -1;
+//   setStyle(obj, 'textDecoration', isUnderline ? '' : 'underline');
+// });
+
+//get active object
+//check if style is present
+//get selection style
+//or get active object style
+//set selection style
+//or set object style
+//renderAll
 export default useControlHandlers;
