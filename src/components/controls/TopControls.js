@@ -32,7 +32,7 @@ import useControlHanders from './useControlHanders';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '$ddeedd',
+    backgroundColor: '#202125',
   },
   picker: {
     display: 'inline-block',
@@ -166,19 +166,19 @@ const TopControls = () => {
             <FaSortNumericDown />
           </CtlButton>
           <CtlButton
-            variant="contained"
+            // variant="contained"
             color="secondary"
             onClick={onRemove}
             data-tip="Delete Selected Item"
           >
-            <MdClose fill="white" />
+            <MdClose />
           </CtlButton>
           {/* <Box className={classes.picker}> */}
 
           {/* </Box> */}
         </ButtonGroup>
         <div style={{ position: 'relative', display: 'inline-block' }}>
-          <Button
+          <CtlButton
             disabled={
               !selectedObject.type || selectedObject.type === 'image'
                 ? true
@@ -187,14 +187,8 @@ const TopControls = () => {
             variant="outlined"
             onClick={() => setShowPicker(!showPicker)}
           >
-            <AiOutlineFontColors
-              fill={
-                !selectedObject.type || selectedObject.type === 'image'
-                  ? 'gray'
-                  : selectedObject.fill
-              }
-            />
-          </Button>
+            <AiOutlineFontColors />
+          </CtlButton>
           {showPicker ? (
             <div
               style={{
@@ -278,7 +272,7 @@ const TopControls = () => {
         </>
         {/* </Box> */}
 
-        <ReactTooltip />
+        <ReactTooltip place="bottom" />
       </div>
     </>
   );

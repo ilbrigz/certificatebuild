@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button, ButtonGroup, Box, makeStyles } from '@material-ui/core';
 
 import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
 import { downloadPdf, previewPdf } from '../../modules/pdfmake.module';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    // backgroundColor: '#202125',
+  },
+
+}));
 const BottomControls = () => {
+  const classes = useStyles()
   const { fabricRef, jexcelRef } = React.useContext(AppContext);
   const { insertText, onImageUpload, logCanvas, testing } = useControlHanders();
 
   return (
-    <>
+    <Box className={classes.root}>
       <label className="myLabel">
         <input
           type="file"
@@ -71,7 +78,7 @@ const BottomControls = () => {
       >
         testing
       </Button> */}
-    </>
+    </Box>
   );
 };
 
