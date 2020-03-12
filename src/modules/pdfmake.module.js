@@ -1,12 +1,6 @@
 import pdfMake from 'pdfmake';
 import cloneDeep from 'clone-deep';
-import {
-  centeredTextProperties,
-  leftOrRightAlignedTextProperties,
-  textboxMargin,
-} from '../utilty/pdf_helper';
 
-import { toDataURL } from '../utilty/helper';
 import { PdfAssetsLoader } from 'pdfmake-utils';
 pdfMake.fonts = {
   Roboto: {
@@ -158,6 +152,7 @@ export const generatePdfUsingSvg = async ({ fabricRef, jexcelRef }) => {
       ...(idx !== filteredData.length - 1 && { pageBreak: 'after' }),
     });
   });
+  console.log(pdfContents);
 
   //reset text and text position
   obj.forEach((i, idx) => {

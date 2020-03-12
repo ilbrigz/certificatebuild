@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     // position: 'relative',
   },
   fabPreview: {
+    zIndex: 99999,
     position: 'fixed',
     right: '20px',
     bottom: '100px',
@@ -35,6 +36,7 @@ const BottomControls = () => {
         color="primary"
         className={classes.fabPreview}
         onClick={() => previewPdf({ fabricRef, jexcelRef })}
+        // onClick={() => console.log(jexcelRef.current.getData())}
       >
         <TiTabsOutline size="2em" color="white" />
       </Fab>
