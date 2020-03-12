@@ -2,12 +2,10 @@ import { fabric } from 'fabric';
 import jexcel from 'jexcel';
 import { makeid } from '../utilty/helper';
 import { jexcelInstanceOptions } from '../config/jexcel.config';
-import { fabricTextOptions } from '../config/fabric.config';
 
-const jexcelInit = ({ fabricRef, id }) => {
-  console.log(fabricRef, 'from jexcel $$$$$$$$$$$');
+const jexcelInit = ({ fabricRef, divRef }) => {
   //#########JEXCEL############
-  const jexcelInstance = jexcel(document.getElementById(id), {
+  const jexcelInstance = jexcel(divRef.current, {
     ...jexcelInstanceOptions,
     onchangeheader: (a, b, c, d) => {
       onColumnNameChange(b, c, d);

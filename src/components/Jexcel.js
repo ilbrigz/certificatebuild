@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { AppContext } from '../context';
-import { Fab, Modal, makeStyles } from '@material-ui/core';
+import { Fab, Grow, makeStyles, Backdrop } from '@material-ui/core';
 
 import jexcelInit from '../modules/Jexcel.module';
 const useStyles = makeStyles((theme) => ({
@@ -13,9 +13,20 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   fabJexcelOpen: {
-    position: 'absolute',
+    position: 'fixed',
     top: 20,
     left: 20,
+  },
+  modal: {
+    visibility: "visible !important",
+    zIndex: theme.zIndex.drawer + 2,
+    position: 'fixed',
+    top: 20,
+    left: 20
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 }));
 function getModalStyle() {
@@ -23,9 +34,9 @@ function getModalStyle() {
   const left = 50 + Math.round(Math.random() * 20) - 10;
 
   return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
+    // top: `${top}%`,
+    // left: `${left}%`,
+    // transform: `translate(-${top}%, -${left}%)`,
   };
 }
 
@@ -36,9 +47,7 @@ const Jexcel = () => {
   const { fabricRef, jexcelRef } = React.useContext(AppContext);
 
   const classes = useStyles();
-  const initJexcel = () => {
-    jexcelRef.current = jexcelInit({ fabricRef, id: 'jexceldiv' });
-  };
+  useEffect(() => { jexcelRef.current = jexcelInit({ fabricRef, divRef }) }, [])
   const handleClose = () => {
     setOpen(false);
   };
@@ -47,19 +56,23 @@ const Jexcel = () => {
       <Fab onClick={() => setOpen(true)} className={classes.fabJexcelOpen}>
         Open
       </Fab>
-      <Modal
-        onRendered={initJexcel}
-        keepMounted={true}
-        // aria-labelledby="simple-modal-title"
-        // aria-describedby="simple-modal-description"
-        open={open}
-        onClose={handleClose}
-      >
-        <div style={modalStyle} className={classes.paper}>
-          <div id="jexceldiv"></div>
+      <Backdrop open={true} onClick={handleClose}>
+        <Grow
+          // aria-labelledby="simple-modal-title"
+          // aria-describedby="simple-modal-description"
+          in={open}
+          className={classes.modal}
+        // style={{ ...(!open && { display: 'none' }) }}
+        >
+          {/* <div style={modalStyle} className={classes.paper}> */}
+          <div ref={divRef}></div>
           {/* <SimpleModal /> */}
-        </div>
-      </Modal>
+          {/* </div> */}
+        </Grow>
+      </Backdrop>
+
+
+
     </>
   );
 };
