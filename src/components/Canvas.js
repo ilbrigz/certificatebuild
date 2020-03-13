@@ -11,6 +11,7 @@ import { addUndoRedo, addFabricKeyListener } from '../modules/fabric.module';
 import { preventOutsideMovement } from '../utilty/canvass_helper.js';
 console.log(data);
 const Canvas = () => {
+  const windowSizeRef = React.useRef();
   const { fabricRef, setSelectedObject, selectedObject } = React.useContext(
     AppContext
   );
@@ -22,7 +23,10 @@ const Canvas = () => {
   }, []);
 
   const updateObjectSize = React.useCallback((e) => {
-    alert(e.target)
+    var width = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+      if(width === windowSizeRef.current){return}
     const oldWidth = fabricRef.current.width;
     const containerDim = containerRef.current.getBoundingClientRect();
     fabricRef.current.setHeight(containerDim.width * (595 / 842));
@@ -43,10 +47,16 @@ const Canvas = () => {
       (backgroundImage.top / oldWidth) * fabricRef.current.width;
     fabricRef.current.discardActiveObject();
     fabricRef.current.renderAll();
+   windowSizeRef.current = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth
   }, []);
 
   React.useEffect(() => {
     fabric.devicePixelRatio = 2;
+    windowSizeRef.current = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
     Promise.all(['OldEnglish'].map((item) => new FontFaceObserver(item).load()))
       .then(() => renderCanvas())
       .catch(() => renderCanvas());
@@ -100,21 +110,17 @@ const Canvas = () => {
     //fabric events
     fabricRef.current.on('object:moving', preventOutsideMovement);
     fabricRef.current.on('selection:created', (e) => {
-      console.log('selection created', e.target);
       setSelectedObject(e.target);
       window.addEventListener('keydown', handleUserKeyPress);
     });
     if (!fabricRef.current) return;
     fabricRef.current.on('object:modified', (e) => {
       setSelectedObject(e.target);
-      console.log('modified', e.target);
     });
     fabricRef.current.on('selection:updated', (e) => {
-      console.log('selection:updated', e.target);
       setSelectedObject(e.target);
     });
     fabricRef.current.on('selection:cleared', (e) => {
-      console.log('selection:cleared', e.target);
       setSelectedObject({});
       window.removeEventListener('keydown', handleUserKeyPress);
     });
