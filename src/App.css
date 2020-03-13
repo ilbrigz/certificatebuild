@@ -1,33 +1,35 @@
 @font-face {
-  font-family: "OldEnglish";
+  font-family: 'OldEnglish';
   src: url('/OLD.ttf');
-   /* font-weight: normal; */
-  /* font-style: normal;  */
+  font-weight: normal;
+  font-style: normal;
 }
- /* @font-face {
-  font-family: "OldEnglish";
+@font-face {
+  font-family: 'OldEnglish';
   src: url('/OldEnglishTextMT-Bold.ttf');
   font-style: normal;
   font-weight: bold;
 }
 @font-face {
-  font-family: "OldEnglish";
-src: url('/OldEnglishTextMT-Oblique.ttf');
+  font-family: 'OldEnglish';
+  src: url('/OldEnglishTextMT-Oblique.ttf');
   font-style: italic;
 }
 
 @font-face {
   font-family: 'OldEnglish';
-  src:url('/OldEnglishTextMT-BoldOblique.ttf');
+  src: url('/OldEnglishTextMT-BoldOblique.ttf');
   font-weight: bold;
   font-style: italic;
-}  */
-html, body {
-  margin: 0; padding: 0
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 
 button {
-  font-family: "Roboto", Helvetica, Arial;
+  font-family: 'Roboto', Helvetica, Arial;
   border: 1px solid #222;
   background: gray;
   color: white;
@@ -52,7 +54,7 @@ label.myLabel input[type='file'] {
 
 /***** Example custom styling *****/
 .myLabel {
-  font-family: "Roboto", Helvetica, Arial;
+  font-family: 'Roboto', Helvetica, Arial;
   border: 1px solid rgba(0, 0, 0, 0.23);
   border-radius: 3px;
   background: inherit;

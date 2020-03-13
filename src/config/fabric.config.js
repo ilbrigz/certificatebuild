@@ -6,8 +6,6 @@ export const fabricOptionsOveride = {
   cornerSize: 12,
   padding: 0,
   borderDashArray: [3, 3],
-  // hasRotatingPoint: false,
-  fontFamily: 'Roboto',
 };
 
 export const fabricTextboxControlOptions = {

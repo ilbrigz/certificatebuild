@@ -5,8 +5,8 @@ import Fab from '@material-ui/core/Fab';
 import { AppContext } from '../../context';
 import useControlHanders from './useControlHanders';
 import { downloadPdf, previewPdf } from '../../modules/pdfmake.module';
-import { TiTabsOutline } from 'react-icons/ti';
 import { FaFileDownload } from 'react-icons/fa';
+import { IoMdOpen } from 'react-icons/io';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,12 +17,13 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 99999,
     position: 'fixed',
     right: '20px',
-    bottom: '100px',
+    bottom: '120px',
   },
   fabDownload: {
+    zIndex: 99999,
     position: 'fixed',
     right: '20px',
-    bottom: '20px',
+    bottom: '40px',
   },
 }));
 const BottomControls = () => {
@@ -38,7 +39,7 @@ const BottomControls = () => {
         onClick={() => previewPdf({ fabricRef, jexcelRef })}
         // onClick={() => console.log(jexcelRef.current.getData())}
       >
-        <TiTabsOutline size="2em" color="white" />
+        <IoMdOpen size="2em" color="white" />
       </Fab>
       <Fab
         color="secondary"

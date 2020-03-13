@@ -8,7 +8,7 @@ import Canvas from './Canvas';
 import Notes from './Notes';
 import '../App.css';
 
-import Jexcel from './Jexcel';
+import Drawer from './Drawer';
 
 const Test = React.memo((props) => {
   console.log('rendering test');
@@ -30,7 +30,7 @@ export default function Editor(props) {
         </Box>
 
         <Box m={1}>
-          <Jexcel />
+          {/* <Drawer /> */}
           <Notes />
         </Box>
       </div>
