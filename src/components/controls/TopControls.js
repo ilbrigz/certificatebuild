@@ -272,7 +272,7 @@ const TopControls = () => {
         </>
         {/* </Box> */}
 
-        <ReactTooltip place="bottom" />
+        <ReactTooltip place="bottom" globalEventOff="touchstart" />
       </div>
     </>
   );

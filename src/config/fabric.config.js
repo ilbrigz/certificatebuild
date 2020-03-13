@@ -7,7 +7,7 @@ export const fabricOptionsOveride = {
   padding: 0,
   borderDashArray: [3, 3],
   controlsAboveOverlay: true,
-  allowTouchScrolling: true
+  allowTouchScrolling: true,
 };
 
 export const fabricTextboxControlOptions = {

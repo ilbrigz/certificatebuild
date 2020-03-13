@@ -121,7 +121,7 @@ export const generatePdfUsingSvg = async ({ fabricRef, jexcelRef }) => {
   });
   const headers = jexcelRef.current.getHeaders().split(',');
   const filteredData = jexcelRef.current.getData().filter((a) =>
-    a.some(function(x) {
+    a.some(function (x) {
       return x;
     })
   );
