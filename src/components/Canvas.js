@@ -22,7 +22,7 @@ const Canvas = () => {
   }, []);
 
   const updateObjectSize = React.useCallback((e) => {
-    alert('e.target')
+    alert(e.target)
     const oldWidth = fabricRef.current.width;
     const containerDim = containerRef.current.getBoundingClientRect();
     fabricRef.current.setHeight(containerDim.width * (595 / 842));
