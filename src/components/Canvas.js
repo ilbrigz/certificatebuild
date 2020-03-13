@@ -21,7 +21,8 @@ const Canvas = () => {
     addFabricKeyListener(fabricRef, e);
   }, []);
 
-  const updateObjectSize = React.useCallback(() => {
+  const updateObjectSize = React.useCallback((e) => {
+    alert('e.target')
     const oldWidth = fabricRef.current.width;
     const containerDim = containerRef.current.getBoundingClientRect();
     fabricRef.current.setHeight(containerDim.width * (595 / 842));
@@ -118,7 +119,7 @@ const Canvas = () => {
       window.removeEventListener('keydown', handleUserKeyPress);
     });
 
-    fabricRef.current.on('object:moving', function(options) {
+    fabricRef.current.on('object:moving', function (options) {
       if (
         options.target.type === 'image' &&
         Math.round((options.target.left / 50) * 4) % 4 == 0 &&
