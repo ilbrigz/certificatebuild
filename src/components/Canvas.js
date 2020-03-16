@@ -11,23 +11,17 @@ import data from '../data/fabric';
 import { addUndoRedo, addFabricKeyListener } from '../modules/fabric.module';
 
 import { preventOutsideMovement } from '../utilty/canvass_helper.js';
-
-
-
-
-
 const useStyles = makeStyles((theme) => ({
   canvasContainer: {
     backgroundColor: 'red',
     overflow: 'hidden',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    width: '100%',
+    height: '80vh',
     position: 'relative',
     '&>div': {
       position: 'relative',
       width: 'auto',
       height: 'auto',
-      transition: "all .2s ease-in-out",
     },
   },
 }));
@@ -38,6 +32,7 @@ const Canvas = () => {
   const [translateY, setTranslateY] = React.useState(0)
   const containerRef = React.useRef(null);
   const canvasRef = React.useRef(null);
+  const paperRef = React.useRef(null);
   const convasInnerContainer = React.useRef(null);
   const bind = useWheel(
     ({ event }) => {
@@ -54,7 +49,15 @@ const Canvas = () => {
 
 
 
-  const [props, set, stop] = useSpring(() => ({ transform: `scale(${scale}) translateX(${translateX}px) translateY(${translateY}px)`, config: { duration: 100 } }))
+  const [props, set, stop] = useSpring(
+    () => ({
+      transform: `scale(${scale}) translateX(${translateX}px) translateY(${translateY}px)`,
+      config: { duration: 100 },
+      onRest() {
+        zoomIt(fabricRef, scale)
+      }
+    })
+  )
   set({ transform: `scale(${scale}) translateX(${translateX}px) translateY(${translateY}px)` })
 
   React.useEffect(bind, [bind])
@@ -82,6 +85,8 @@ const Canvas = () => {
       canvas: fabricRef.current,
     });
     fabricRef.current.setActiveObject(sel);
+    console.log(fabricRef.current.width, oldWidth)
+
     sel.scale(fabricRef.current.width / oldWidth);
     sel.left = (sel.left / oldWidth) * fabricRef.current.width;
     sel.top = (sel.top / oldWidth) * fabricRef.current.width;
@@ -91,6 +96,7 @@ const Canvas = () => {
       (backgroundImage.left / oldWidth) * fabricRef.current.width;
     backgroundImage.top =
       (backgroundImage.top / oldWidth) * fabricRef.current.width;
+    paperRef.current.style.height = `${containerDim.width * (595 / 842)}px`
     fabricRef.current.discardActiveObject();
     fabricRef.current.renderAll();
     //update the windowSizeRef for future reference
@@ -148,6 +154,7 @@ const Canvas = () => {
         (backgroundImage.left / 842) * fabricRef.current.width;
       backgroundImage.top =
         (backgroundImage.top / 842) * fabricRef.current.width;
+      paperRef.current.style.height = `${containerDim.width * (595 / 842)}px`
       fabricRef.current.discardActiveObject();
       fabricRef.current.renderAll();
     });
@@ -204,18 +211,21 @@ const Canvas = () => {
     <>
       <Paper square
         {...outer()}
-        className={classes.canvasContainer} elevation={3} ref={containerRef}>
-        <animated.div style={props} ref={convasInnerContainer}>
+        ref={paperRef}
+        className={classes.canvasContainer} elevation={3} >
+        <animated.div style={props} ref={convasInnerContainer} ref={containerRef}>
           <canvas ref={canvasRef} id="canvas"></canvas>
         </animated.div>
       </Paper>
       <button onClick={() => {  // Update spring with new props
         setScale(scale + .1)
+        // updateObjectSize()
         // Stop animation
         // stop()
       }}>scale up</button>
       <button onClick={() => {  // Update spring with new props
         setScale(scale - .1)
+        // updateObjectSize()
       }}>scale down</button>
       <button onClick={() => {  // Update spring with new props
         setTranslateX(translateX + 16)
@@ -230,6 +240,7 @@ const Canvas = () => {
         setTranslateY(translateY - 16)
       }}>move down</button>
       <button onClick={() => {  // Update spring with new props
+
         setTranslateY(0)
         setTranslateX(0)
         setScale(1)
@@ -239,3 +250,34 @@ const Canvas = () => {
 };
 
 export default Canvas;
+
+function zoomIt(canvasRef, factor) {
+  canvasRef.current.setHeight(canvasRef.current.getHeight() * factor);
+  canvasRef.current.setWidth(canvasRef.current.getWidth() * factor);
+  if (canvasRef.current.backgroundImage) {
+    // Need to scale background images as well
+    var bi = canvasRef.current.backgroundImage;
+    bi.width = bi.width * factor; bi.height = bi.height * factor;
+  }
+  var objects = canvasRef.current.getObjects();
+  for (var i in objects) {
+    var scaleX = objects[i].scaleX;
+    var scaleY = objects[i].scaleY;
+    var left = objects[i].left;
+    var top = objects[i].top;
+
+    var tempScaleX = scaleX * factor;
+    var tempScaleY = scaleY * factor;
+    var tempLeft = left * factor;
+    var tempTop = top * factor;
+
+    objects[i].scaleX = tempScaleX;
+    objects[i].scaleY = tempScaleY;
+    objects[i].left = tempLeft;
+    objects[i].top = tempTop;
+
+    objects[i].setCoords();
+  }
+  canvasRef.current.renderAll();
+  canvasRef.current.calcOffset();
+}
