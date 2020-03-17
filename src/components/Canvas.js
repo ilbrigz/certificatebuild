@@ -3,8 +3,6 @@ import { fabric } from 'fabric';
 import { AppContext } from '../context';
 import FontFaceObserver from 'fontfaceobserver';
 import { Paper, makeStyles } from '@material-ui/core';
-import { useGesture, useWheel } from 'react-use-gesture'
-import { useSpring, animated } from 'react-spring'
 
 import { fabricOptionsOveride } from '../config/fabric.config';
 import data from '../data/fabric';
@@ -16,17 +14,16 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'red',
     overflow: 'hidden',
     width: '100%',
-    height: '80vh',
     position: 'relative',
-    '&>div': {
+    '&  div': {
       position: 'relative',
       width: 'auto',
       height: 'auto',
+      overflow: 'hidden'
     },
   },
 }));
 const Canvas = () => {
-  const outer = useWheel(state => console.log(state), { eventOptions: { captureEvents: false } })
   const [scale, setScale] = React.useState(1)
   const [translateX, setTranslateX] = React.useState(0)
   const [translateY, setTranslateY] = React.useState(0)
@@ -34,35 +31,15 @@ const Canvas = () => {
   const canvasRef = React.useRef(null);
   const paperRef = React.useRef(null);
   const convasInnerContainer = React.useRef(null);
-  const bind = useWheel(
-    ({ event }) => {
-      console.log('from inner')
-      event.preventDefault()
-      event.stopPropagation()
-    }, { domTarget: convasInnerContainer, eventOptions: { passive: false } }
-  )
+
   const classes = useStyles()
   const windowSizeRef = React.useRef();
   const { fabricRef, setSelectedObject, selectedObject } = React.useContext(
     AppContext
   );
-
-
-
-  const [props, set, stop] = useSpring(
-    () => ({
-      transform: `scale(${scale}) translateX(${translateX}px) translateY(${translateY}px)`,
-      config: { duration: 100 },
-      onRest() {
-        zoomIt(fabricRef, scale)
-      }
-    })
-  )
-  set({ transform: `scale(${scale}) translateX(${translateX}px) translateY(${translateY}px)` })
-
-  React.useEffect(bind, [bind])
-
-
+  React.useEffect(
+    () => {
+    }, [scale])
   const handleUserKeyPress = React.useCallback((e) => {
     addFabricKeyListener(fabricRef, e);
   }, []);
@@ -78,8 +55,8 @@ const Canvas = () => {
     if (width === windowSizeRef.current) { return }
     const oldWidth = fabricRef.current.width;
     const containerDim = containerRef.current.getBoundingClientRect();
-    fabricRef.current.setHeight(containerDim.width * (595 / 842));
     fabricRef.current.setWidth(containerDim.width);
+    fabricRef.current.setHeight(containerDim.width * (595 / 842));
     fabricRef.current.discardActiveObject();
     var sel = new fabric.ActiveSelection(fabricRef.current.getObjects(), {
       canvas: fabricRef.current,
@@ -138,8 +115,9 @@ const Canvas = () => {
     // load from JSON
     fabricRef.current.loadFromJSON(data, () => {
       const containerDim = containerRef.current.getBoundingClientRect();
-      fabricRef.current.setHeight(containerDim.width * (595 / 842));
       fabricRef.current.setWidth(containerDim.width);
+      fabricRef.current.setHeight(containerDim.width * (595 / 842));
+      console.log(fabricRef.current.width)
       fabricRef.current.discardActiveObject();
       var sel = new fabric.ActiveSelection(fabricRef.current.getObjects(), {
         canvas: fabricRef.current,
@@ -176,6 +154,40 @@ const Canvas = () => {
       window.removeEventListener('keydown', handleUserKeyPress);
     });
 
+    canvas.on('mouse:wheel', function (opt) {
+      console.time("mouse:wheel start");
+      var delta = opt.e.deltaY;
+      delta = (opt.e.deltaY > 0) ? -(opt.e.deltaY) : -(opt.e.deltaY);
+      if (delta > 0) {
+
+        const originalRender = fabric.Image.prototype.render;
+        fabric.Image.prototype.render = function (ctx, noTransform) {
+          console.time("originalRender start");
+          if (!this.isOnScreen()) {
+            return;
+          }
+          console.timeEnd("originalRender start");
+          return originalRender.call(this, ctx, noTransform);
+        };
+      }
+      console.time("actual zoom calculation start");
+      var zoom = canvas.getZoom();
+      zoom = zoom + delta / 200;
+      zoom = (delta > 0) ? zoom * 1 : zoom / 1;
+      let zoomValueForDraggableCircles = zoom;
+      if (zoom > 40) zoom = 40;
+      if (zoom < 1) {
+        zoom = 1;
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+      }
+      //canvas.setZoom(zoom);
+      canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+      console.timeEnd("actual zoom calculation start");
+      opt.e.preventDefault();
+      opt.e.stopPropagation();
+      console.timeEnd("mouse:wheel start");
+    });
+
     canvas.on('mouse:down', (e) => {
       if (e.target !== null) {
         // e.stopPropagation();
@@ -207,44 +219,58 @@ const Canvas = () => {
     fabric.Object.prototype.set(fabricOptionsOveride);
   }, []);
 
+
   return (
     <>
       <Paper square
-        {...outer()}
         ref={paperRef}
         className={classes.canvasContainer} elevation={3} >
-        <animated.div style={props} ref={convasInnerContainer} ref={containerRef}>
+        <div ref={convasInnerContainer} ref={containerRef}>
           <canvas ref={canvasRef} id="canvas"></canvas>
-        </animated.div>
+        </div>
       </Paper>
       <button onClick={() => {  // Update spring with new props
-        setScale(scale + .1)
-        // updateObjectSize()
-        // Stop animation
-        // stop()
+        fabricRef.current.zoomToPoint(new fabric.Point(fabricRef.current.width / 2, fabricRef.current.height / 2), fabricRef.current.getZoom() / .9);
       }}>scale up</button>
       <button onClick={() => {  // Update spring with new props
-        setScale(scale - .1)
+        console.log(fabricRef.current.getZoom())
+        fabricRef.current.zoomToPoint(new fabric.Point(fabricRef.current.width / 2, fabricRef.current.height / 2), fabricRef.current.getZoom() * .9);
         // updateObjectSize()
       }}>scale down</button>
       <button onClick={() => {  // Update spring with new props
-        setTranslateX(translateX + 16)
+        var units = 10;
+        var delta = new fabric.Point(units, 0);
+        fabricRef.current.relativePan(delta);
       }}>move left</button>
       <button onClick={() => {  // Update spring with new props
-        setTranslateX(translateX - 16)
+        //update spring with new props
+        var units = 10;
+        var delta = new fabric.Point(-units, 0);
+        fabricRef.current.relativePan(delta);
+
       }}>move right</button>
       <button onClick={() => {  // Update spring with new props
-        setTranslateY(translateY + 16)
+
+        var units = 10;
+        var delta = new fabric.Point(0, units);
+        fabricRef.current.relativePan(delta);
+
       }}>move up</button>
       <button onClick={() => {  // Update spring with new props
-        setTranslateY(translateY - 16)
+        var units = 10;
+        var delta = new fabric.Point(0, -units);
+        fabricRef.current.relativePan(delta);
       }}>move down</button>
+
       <button onClick={() => {  // Update spring with new props
 
         setTranslateY(0)
         setTranslateX(0)
         setScale(1)
       }}>reset</button>
+      <button onClick={() => {  // Update spring with new props
+        fabricRef.current.setViewportTransform([1, 0, 0, 1, 0, 0]);
+      }}>reset zoom</button>
     </>
   );
 };
@@ -252,6 +278,7 @@ const Canvas = () => {
 export default Canvas;
 
 function zoomIt(canvasRef, factor) {
+  if (!canvasRef.current) return;
   canvasRef.current.setHeight(canvasRef.current.getHeight() * factor);
   canvasRef.current.setWidth(canvasRef.current.getWidth() * factor);
   if (canvasRef.current.backgroundImage) {
