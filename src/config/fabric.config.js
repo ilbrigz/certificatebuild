@@ -8,6 +8,7 @@ export const fabricOptionsOveride = {
   borderDashArray: [3, 3],
   controlsAboveOverlay: true,
   allowTouchScrolling: true,
+  snapAngle: 5
 };
 
 export const fabricTextboxControlOptions = {
@@ -34,21 +35,16 @@ export const fabricTextControlOptions = {
 };
 
 export const fabricTextOptions = {
-  left: 0,
-  fontSize: 30,
-  textAlign: 'center',
-  fontFamily: 'Roboto',
-  top: 0,
-  cornerStrokeColor: 'red',
-  borderColor: 'red',
-  hoverCursor: 'not-allowed',
+  // fontSize: 30,
+  // textAlign: 'center',
+  // fontFamily: 'Roboto',
+  // cornerStrokeColor: 'red',
+  // borderColor: 'red',
+  // hoverCursor: 'not-allowed',
 };
 
 export const fabricItextOptions = {
-  left: 0,
-  top: 0,
   fontFamily: 'Roboto',
-  hasControls: true,
 };
 
 export const fabricTextboxOptions = {

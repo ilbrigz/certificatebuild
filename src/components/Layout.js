@@ -16,15 +16,15 @@ const useStyles = makeStyles((theme) => ({
 export default function Layout() {
   const classes = useStyles();
   return (
-    <div style={{ backgroundColor: '#2B2C30' }}>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <div style={{ backgroundColor: '#2B2C30' }}>
         {/* <Header /> */}
         <TopControls />
         <Container maxWidth="md" className={classes.container}>
           <Editor />
         </Container>
         <Drawer />
-      </ThemeProvider>
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }

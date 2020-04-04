@@ -6,9 +6,8 @@ import { Paper, makeStyles } from '@material-ui/core';
 
 import { fabricOptionsOveride } from '../config/fabric.config';
 import data from '../data/fabric';
-import { addUndoRedo, addFabricKeyListener } from '../modules/fabric.module';
+import { addUndoRedo, addCanvasLister, eventCleanUp } from '../modules/fabric.module';
 
-import { preventOutsideMovement } from '../utilty/canvass_helper.js';
 const useStyles = makeStyles((theme) => ({
   canvasContainer: {
     backgroundColor: 'red',
@@ -24,9 +23,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Canvas = () => {
-  const [scale, setScale] = React.useState(1)
-  const [translateX, setTranslateX] = React.useState(0)
-  const [translateY, setTranslateY] = React.useState(0)
   const containerRef = React.useRef(null);
   const canvasRef = React.useRef(null);
   const paperRef = React.useRef(null);
@@ -37,12 +33,6 @@ const Canvas = () => {
   const { fabricRef, setSelectedObject, selectedObject } = React.useContext(
     AppContext
   );
-  React.useEffect(
-    () => {
-    }, [scale])
-  const handleUserKeyPress = React.useCallback((e) => {
-    addFabricKeyListener(fabricRef, e);
-  }, []);
 
   const updateObjectSize = React.useCallback((e) => {
     //check the updated width
@@ -82,7 +72,10 @@ const Canvas = () => {
       || document.body.clientWidth
   }, []);
 
+
+
   React.useEffect(() => {
+    // fix pixelated text
     fabric.devicePixelRatio = 2;
     windowSizeRef.current = window.innerWidth
       || document.documentElement.clientWidth
@@ -91,18 +84,19 @@ const Canvas = () => {
       .then(() => renderCanvas())
       .catch(() => renderCanvas());
     window.addEventListener('resize', updateObjectSize);
+
     return () => {
       fabricRef.current.removeListeners();
       fabricRef.current = null;
       // clearInterval(intervalRender);
-      window.removeEventListener('keydown', handleUserKeyPress);
+      eventCleanUp()
       window.removeEventListener('resize', updateObjectSize);
     };
   }, []);
 
   const renderCanvas = React.useCallback(() => {
     const canvas = new fabric.Canvas('canvas', {
-      objectCaching: false,
+      // objectCaching: false,
       backgroundColor: '#ffffff',
       preserveObjectStacking: true,
       fontSize: 20,
@@ -117,7 +111,6 @@ const Canvas = () => {
       const containerDim = containerRef.current.getBoundingClientRect();
       fabricRef.current.setWidth(containerDim.width);
       fabricRef.current.setHeight(containerDim.width * (595 / 842));
-      console.log(fabricRef.current.width)
       fabricRef.current.discardActiveObject();
       var sel = new fabric.ActiveSelection(fabricRef.current.getObjects(), {
         canvas: fabricRef.current,
@@ -136,89 +129,14 @@ const Canvas = () => {
       fabricRef.current.discardActiveObject();
       fabricRef.current.renderAll();
     });
-    //fabric events
-    fabricRef.current.on('object:moving', preventOutsideMovement);
-    fabricRef.current.on('selection:created', (e) => {
-      setSelectedObject(e.target);
-      window.addEventListener('keydown', handleUserKeyPress);
-    });
-    if (!fabricRef.current) return;
-    fabricRef.current.on('object:modified', (e) => {
-      setSelectedObject(e.target);
-    });
-    fabricRef.current.on('selection:updated', (e) => {
-      setSelectedObject(e.target);
-    });
-    fabricRef.current.on('selection:cleared', (e) => {
-      setSelectedObject({});
-      window.removeEventListener('keydown', handleUserKeyPress);
-    });
-
-    canvas.on('mouse:wheel', function (opt) {
-      console.time("mouse:wheel start");
-      var delta = opt.e.deltaY;
-      delta = (opt.e.deltaY > 0) ? -(opt.e.deltaY) : -(opt.e.deltaY);
-      if (delta > 0) {
-
-        const originalRender = fabric.Image.prototype.render;
-        fabric.Image.prototype.render = function (ctx, noTransform) {
-          console.time("originalRender start");
-          if (!this.isOnScreen()) {
-            return;
-          }
-          console.timeEnd("originalRender start");
-          return originalRender.call(this, ctx, noTransform);
-        };
-      }
-      console.time("actual zoom calculation start");
-      var zoom = canvas.getZoom();
-      zoom = zoom + delta / 200;
-      zoom = (delta > 0) ? zoom * 1 : zoom / 1;
-      let zoomValueForDraggableCircles = zoom;
-      if (zoom > 40) zoom = 40;
-      if (zoom < 1) {
-        zoom = 1;
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-      }
-      //canvas.setZoom(zoom);
-      canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-      console.timeEnd("actual zoom calculation start");
-      opt.e.preventDefault();
-      opt.e.stopPropagation();
-      console.timeEnd("mouse:wheel start");
-    });
-
-    canvas.on('mouse:down', (e) => {
-      if (e.target !== null) {
-        // e.stopPropagation();
-        //Ignore this event, we are clicking on an object (event.target is clicked object)
-        return;
-      }
-      // e.stopPropagation();
-      // e.preventDefault();
-    })
-
-    fabricRef.current.on('object:moving', function (options) {
-      if (
-        options.target.type === 'image' &&
-        Math.round((options.target.left / 50) * 4) % 4 == 0 &&
-        Math.round((options.target.top / 50) * 4) % 4 == 0
-      ) {
-        options.target
-          .set({
-            left: Math.round(options.target.left / 50) * 50,
-            top: Math.round(options.target.top / 50) * 50,
-          })
-          .setCoords();
-      }
-    });
+    //add all canvas listeners
+    addCanvasLister({ selectedObject, setSelectedObject, fabricRef })
     // fabricRef.current.setHeight(595);
     // fabricRef.current.setWidth(842);
 
     fabricRef.current.renderAll();
     fabric.Object.prototype.set(fabricOptionsOveride);
   }, []);
-
 
   return (
     <>
@@ -263,12 +181,6 @@ const Canvas = () => {
       }}>move down</button>
 
       <button onClick={() => {  // Update spring with new props
-
-        setTranslateY(0)
-        setTranslateX(0)
-        setScale(1)
-      }}>reset</button>
-      <button onClick={() => {  // Update spring with new props
         fabricRef.current.setViewportTransform([1, 0, 0, 1, 0, 0]);
       }}>reset zoom</button>
     </>
@@ -276,35 +188,3 @@ const Canvas = () => {
 };
 
 export default Canvas;
-
-function zoomIt(canvasRef, factor) {
-  if (!canvasRef.current) return;
-  canvasRef.current.setHeight(canvasRef.current.getHeight() * factor);
-  canvasRef.current.setWidth(canvasRef.current.getWidth() * factor);
-  if (canvasRef.current.backgroundImage) {
-    // Need to scale background images as well
-    var bi = canvasRef.current.backgroundImage;
-    bi.width = bi.width * factor; bi.height = bi.height * factor;
-  }
-  var objects = canvasRef.current.getObjects();
-  for (var i in objects) {
-    var scaleX = objects[i].scaleX;
-    var scaleY = objects[i].scaleY;
-    var left = objects[i].left;
-    var top = objects[i].top;
-
-    var tempScaleX = scaleX * factor;
-    var tempScaleY = scaleY * factor;
-    var tempLeft = left * factor;
-    var tempTop = top * factor;
-
-    objects[i].scaleX = tempScaleX;
-    objects[i].scaleY = tempScaleY;
-    objects[i].left = tempLeft;
-    objects[i].top = tempTop;
-
-    objects[i].setCoords();
-  }
-  canvasRef.current.renderAll();
-  canvasRef.current.calcOffset();
-}

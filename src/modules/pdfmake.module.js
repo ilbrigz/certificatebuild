@@ -112,6 +112,7 @@ assetsLoader
   });
 
 export const generatePdfUsingSvg = async ({ fabricRef, jexcelRef }) => {
+  fabricRef.current.setViewportTransform([1, 0, 0, 1, 0, 0]);
   const screenShot = fabricRef.current.toObject();
   let obj = fabricRef.current._objects.filter((o) => {
     return o.type === 'text';
@@ -119,6 +120,7 @@ export const generatePdfUsingSvg = async ({ fabricRef, jexcelRef }) => {
   const objScreenShot = screenShot.objects.filter((o) => {
     return o.type === 'text';
   });
+
   const headers = jexcelRef.current.getHeaders().split(',');
   const filteredData = jexcelRef.current.getData().filter((a) =>
     a.some(function (x) {

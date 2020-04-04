@@ -54,13 +54,15 @@ const TopControls = () => {
     setFabricProperty,
     onRemove,
     onColorChange,
+    undo,
+    redo
   } = useControlHanders();
 
   return (
     <>
       <div className={classes.root} style={{ minHeight: '31px' }}>
-        <Button>Undo</Button>
-        <Button>Redo</Button>
+        <Button onClick={undo}>Undo</Button>
+        <Button onClick={redo}>Redo</Button>
         <ButtonGroup
           disabled={
             !selectedObject.type || selectedObject.type === 'image'
@@ -238,6 +240,7 @@ const TopControls = () => {
             }}
             min="7"
             max="80"
+            data-prev-value={selectedObject.fontSize || 30}
             onChange={(e) => onSetFontSize(e)}
           />
         </label>
