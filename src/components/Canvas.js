@@ -7,7 +7,7 @@ import { Paper, makeStyles } from '@material-ui/core';
 import { fabricOptionsOveride } from '../config/fabric.config';
 import data from '../data/fabric';
 import { addUndoRedo, addCanvasLister, eventCleanUp } from '../modules/fabric.module';
-
+import initAligningGuidelines from '../modules/aligningLines'
 const useStyles = makeStyles((theme) => ({
   canvasContainer: {
     backgroundColor: 'red',
@@ -133,6 +133,7 @@ const Canvas = () => {
     addCanvasLister({ selectedObject, setSelectedObject, fabricRef })
     // fabricRef.current.setHeight(595);
     // fabricRef.current.setWidth(842);
+    initAligningGuidelines(fabricRef.current)
 
     fabricRef.current.renderAll();
     fabric.Object.prototype.set(fabricOptionsOveride);

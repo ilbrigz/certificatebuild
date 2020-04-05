@@ -57,7 +57,6 @@ export const addCanvasLister = ({ selectedObject, setSelectedObject, fabricRef }
     if (!fabricRef.current) return;
     fabricRef.current.on('object:moving', preventOutsideMovement);
     fabricRef.current.on('object:modified', (e) => {
-        console.log('modified')
         if (e.target.addedToRU) {
             delete e.target.addedToRU
             return
@@ -65,34 +64,93 @@ export const addCanvasLister = ({ selectedObject, setSelectedObject, fabricRef }
         RU.onCanvasChange({ activeEl: e.target, eventType: 'object:modified' })
     })
     fabricRef.current.on('object:moved', (e) => {
+        e.target.setControlsVisibility({
+            tl: true, //top-left
+            mt: true, // middle-top
+            tr: true, //top-right
+            ml: true, //middle-left
+            mr: true, //middle-right
+            bl: true, // bottom-left
+            mb: true, //middle-bottom
+            br: true, //bottom-right
+            mtr: true //bottom-right
+        })
         e.target.addedToRU = "object:moved"
+        if (e.target.type === 'activeSelection') {
+            //discard to to add update the e.tagerget dimensions
+            fabricRef.current.discardActiveObject()
+            //add to undo
+            RU.onCanvasChange({ activeEl: e.target, eventType: 'group:moved' })
+            //update the clone
+            if (e.target.type === "activeSelection") RU.cloned = RU.generateSelectionClone(fabricRef, e.target)
+            // select the discarded selection
+            const newSelection = new fabric.ActiveSelection(e.target.getObjects(), { canvas: fabricRef.current });
+            fabricRef.current.setActiveObject(newSelection);
+            return;
+        }
         RU.onCanvasChange({ activeEl: e.target, eventType: 'object:moved' })
     });
     fabricRef.current.on('object:scaled', (e) => {
         e.target.addedToRU = "object:scaled"
+        console.log('scaled')
+        if (e.target.type === 'activeSelection') {
+            fabricRef.current.discardActiveObject()
+            //add to undo
+            RU.onCanvasChange({ activeEl: e.target, eventType: 'group:scaled' })
+            if (e.target.type === "activeSelection") RU.cloned = RU.generateSelectionClone(fabricRef, e.target)
+            // select the discarded selection
+            const newSelection = new fabric.ActiveSelection(e.target.getObjects(), { canvas: fabricRef.current });
+            fabricRef.current.setActiveObject(newSelection);
+            return;
+        }
         RU.onCanvasChange({ activeEl: e.target, eventType: 'object:scaled' })
     });
     fabricRef.current.on('object:rotated', (e) => {
         e.target.addedToRU = "object:rotated"
+        console.log('rotated')
+        if (e.target.type === 'activeSelection') {
+            fabricRef.current.discardActiveObject()
+            //add to undo
+            RU.onCanvasChange({ activeEl: e.target, eventType: 'group:rotated' })
+            if (e.target.type === "activeSelection") RU.cloned = RU.generateSelectionClone(fabricRef, e.target)
+            // select the discarded selection
+            const newSelection = new fabric.ActiveSelection(e.target.getObjects(), { canvas: fabricRef.current });
+            fabricRef.current.setActiveObject(newSelection);
+            return;
+        }
         RU.onCanvasChange({ activeEl: e.target, eventType: 'object:rotated' })
     });
     fabricRef.current.on('selection:created', (e) => {
-        // setSelectedObject(e.target);
-        console.log('selection updated')
-        RU.setSeleted(e.target)
+        if (e.target.type !== 'activeSelection') { RU.setSeleted(e.target) }
+        else { RU.cloned = RU.generateSelectionClone(fabricRef, e.target) }
+        console.log(RU.selected)
         window.addEventListener('keydown', handleUserKeyPress.bind(null, fabricRef)
         );
     });
     fabricRef.current.on('selection:updated', (e) => {
-        // setSelectedObject(e.target);
         console.log('selection updated')
         const activeEl = fabricRef.current.getActiveObject();
         RU.setSeleted(activeEl)
     });
+    fabricRef.current.on('object:moving', (e) => {
+        console.log('object:moving')
+        if (!e.target) return
+        e.target.setControlsVisibility({
+            tl: false, //top-left
+            mt: false, // middle-top
+            tr: false, //top-right
+            ml: false, //middle-left
+            mr: false, //middle-right
+            bl: false, // bottom-left
+            mb: false, //middle-bottom
+            br: false, //bottom-right
+            mtr: false //bottom-right
+        })
+
+    });
     fabricRef.current.on('selection:cleared', (e) => {
         setSelectedObject({});
         RU.selected = null
-        RU.cloned = null
         window.removeEventListener('keydown', handleUserKeyPress);
     });
 
@@ -170,4 +228,5 @@ export const eventCleanUp = () => {
 function handleUserKeyPress(fabricRef, e) {
     addSelectedObjectListener(fabricRef, e);
 }
+
 

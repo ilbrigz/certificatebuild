@@ -8,6 +8,7 @@ import {
   fabricTextboxOptions,
 } from '../../config/fabric.config';
 import RU from '../../modules/fabricUndoRedo.class'
+import { makeid } from '../../utilty/helper';
 
 const debouncedStart = debounce((cb, b) => { if (b) { cb(b) } else { cb() } }, 500, {
   'leading': true,
@@ -36,8 +37,10 @@ const useControlHandlers = () => {
   const insertText = (e) => {
     let text;
     if (e.target.innerHTML === 'TEXT') {
-      text = new fabric.IText(`Edit Me!`, {
+      text = new fabric.IText(`Edit This Text!`, {
         fontFamily: 'Roboto',
+        fontSize: 20,
+        uid: makeid(6),
         top: (fabricRef.current.height / 5) * Math.random(),
         left: (fabricRef.current.width / 5) * Math.random(),
       });
@@ -47,6 +50,8 @@ const useControlHandlers = () => {
         'This is a textbox. You can dobble click me to start editing or expand me to your liking.',
         {
           ...fabricTextboxOptions,
+          fontSize: 20,
+          uid: makeid(6),
           top: (fabricRef.current.height / 5) * Math.random(),
           left: (fabricRef.current.width / 5) * Math.random(),
         }
@@ -55,7 +60,11 @@ const useControlHandlers = () => {
     }
 
     fabricRef.current.add(text);
+    fabricRef.current.discardActiveObject()
+    fabricRef.current.setActiveObject(text)
+    setSelectedObject(text.toObject())
     fabricRef.current.renderAll();
+    RU.onCanvasChange({ activeEl: text, eventType: 'object:added' })
   };
 
   const onImageUpload = async (e) => {
@@ -80,6 +89,7 @@ const useControlHandlers = () => {
         var imageinstance = new fabric.Image(imgElement, {
           angle: 0,
           opacity: 1,
+          lockRotation: true,
           cornerSize: 12,
         });
 
@@ -125,6 +135,7 @@ const useControlHandlers = () => {
         }
         fabricRef.current.requestRenderAll();
         setSelectedObject(activeEl.toObject());
+        RU.onCanvasChange({ activeEl, eventType: 'object:toggled' })
         return;
       }
       if (activeEl.setSelectionStyles && activeEl.isEditing) {
@@ -205,6 +216,7 @@ const useControlHandlers = () => {
     const activeEl = fabricRef.current.getActiveObject();
     if (activeEl && activeEl.type) {
       fabricRef.current.bringForward(activeEl);
+      // RU.onCanvasChange({ activeEl: text, eventType: 'object:sendForward' })
     }
   };
 
@@ -217,42 +229,53 @@ const useControlHandlers = () => {
   };
 
   const onSetFontSize = (e) => {
-
-    let direction = e.target.value > parseInt(e.target.dataset.prevValue) ? 'up' : 'down'
-    e.target.dataset.prevValue = e.target.value;
+    const direction = parseInt(e.target.value) > parseInt(e.target.dataset.prevValue) ? 'up' : 'down'
+    //manual input?
+    const typed = (Math.abs(parseInt(e.target.dataset.prevValue) - parseInt(e.target.value)) !== 1)
+    console.log(direction)
+    console.log(typed)
     const activeEl = fabricRef.current.getActiveObject();
-    if (!activeEl) return;
+    if (!activeEl) { return };
+    if (activeEl.type === 'image') { return }
+    // this time we need to set the cloned explicitly
+    // diselect before debounce can cause the this.selected to be undefined
     // for multiple selection ( active elements )
     if (activeEl.type === 'activeSelection') {
+      if (!typed) { e.target.value = e.target.dataset.prevValue }
       const images = activeEl._objects.filter((i) => {
         return (i.type === 'image')
-
       })
       images.forEach((i) => activeEl.removeWithUpdate(i))
       debouncedStart(() => activeEl.clone((cloned) => {
-        RU.selected = cloned;
-        console.log(RU.selected)
+        RU.cloned = cloned;
       }, ['uid']))
-
-      activeEl._objects.map((i) => {
+      activeEl.forEachObject((i) => {
         if (i.type === 'image') {
           return
         }
+        // if manual input use input else decrement/increment
         i.setSelectionStyles(
           {
-            fontSize: direction === 'up' ? i.fontSize++ : i.fontSize--,
+            fontSize: typed ? parseInt(e.target.value) : direction === 'up' ? parseInt(i.fontSize) + 1 : parseInt(i.fontSize) - 1,
           },
           0,
           i._text.length
         );
         //so that obj.fontSize is set for setSelectedObject state
-        i.set({ fontSize: direction === 'up' ? i.fontSize++ : i.fontSize-- })
+        i.set({ fontSize: typed ? parseInt(e.target.value) : direction === 'up' ? parseInt(i.fontSize) + 1 : parseInt(i.fontSize) - 1 })
         fabricRef.current.requestRenderAll();
       });
-      debouncedEnd(() => RU.onCanvasChange({ activeEl, eventType: 'group:modified' }))
+      debouncedEnd(() => {
+        RU.onCanvasChange({ activeEl, eventType: 'group:modified' })
+      })
       setSelectedObject(activeEl.toObject());
+      e.target.dataset.prevValue = e.target.value;
       return;
     }
+    debouncedStart(() => activeEl.clone((cloned) => {
+      RU.cloned = cloned;
+    }, ['uid']))
+
     if (activeEl.setSelectionStyles && activeEl.isEditing) {
       activeEl.setSelectionStyles({
         fontSize: e.target.value.toString(),
@@ -274,6 +297,7 @@ const useControlHandlers = () => {
       })
 
     }
+    e.target.dataset.prevValue = e.target.value;
     activeEl.setCoords();
     fabricRef.current.renderAll();
   };
@@ -282,10 +306,14 @@ const useControlHandlers = () => {
     const activeEl = fabricRef.current.getActiveObject();
     if (!activeEl) return;
     if (activeEl && activeEl.type === 'activeSelection') {
+      activeEl.clone((cloned) => {
+        RU.cloned = cloned;
+        RU.onCanvasChange({ activeEl, eventType: 'group:modified' })
+      }, ['uid'])
       activeEl._objects.forEach((i) => {
-        i.set(property, value);
-        fabricRef.current.requestRenderAll();
+        if (i.type !== 'image') i.set(property, value);
       });
+      fabricRef.current.requestRenderAll();
       setSelectedObject(activeEl.toObject());
       return;
     }
@@ -296,6 +324,7 @@ const useControlHandlers = () => {
       });
       activeEl.setCoords();
       fabricRef.current.requestRenderAll();
+      RU.onCanvasChange({ activeEl, eventType: 'object:modified' })
     } else {
       activeEl.setSelectionStyles(
         {
@@ -306,6 +335,7 @@ const useControlHandlers = () => {
       );
       activeEl.set(property, value);
       fabricRef.current.renderAll();
+      RU.onCanvasChange({ activeEl, eventType: 'object:modified' })
       setSelectedObject(activeEl.toObject());
     }
   };
@@ -333,6 +363,7 @@ const useControlHandlers = () => {
       });
       return;
     }
+    RU.onCanvasChange({ activeEl, eventType: 'object:deleted' })
     if (activeEl.type === 'text') {
       const headers = jexcelRef.current.getHeaders().split(',');
       if (headers.length === 1) {
@@ -345,7 +376,6 @@ const useControlHandlers = () => {
         return;
       });
     }
-    RU.onCanvasChange({ activeEl, eventType: 'object:deleted' })
     fabricRef.current.remove(activeEl);
   };
 
@@ -353,7 +383,7 @@ const useControlHandlers = () => {
     console.log(selectedObject)
     let activeEl = fabricRef.current.getActiveObject();
     if (activeEl) {
-      console.log(activeEl)
+      console.log(activeEl.toSVG())
       return;
     }
     console.log(fabricRef.current.toJSON(['uid']));
@@ -364,14 +394,14 @@ const useControlHandlers = () => {
     const textUndo = document.execCommand('undo', false, null);
     const hasSelectedText = RU.returnSelected()
 
-    if (textUndo && (hasSelectedText === 'i-text' || hasSelectedText === 'textbox')) return;
+    if (textUndo && (hasSelectedText && (hasSelectedText.type === 'i-text' || hasSelectedText.type === 'textbox'))) return;
     RU.doUndo(fabricRef)
 
   }
   const redo = () => {
     const textRedo = document.execCommand('redo', false, null);
     const hasSelectedText = RU.returnSelected()
-    if (textRedo && (hasSelectedText === 'i-text' || hasSelectedText === 'textbox')) return;
+    if (textRedo && (hasSelectedText && (hasSelectedText.type === 'i-text' || hasSelectedText.type === 'textbox'))) return;
     RU.doRedo(fabricRef)
   }
 
