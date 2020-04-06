@@ -6,17 +6,13 @@ class UndoRedo {
         this.cloned = {};
         this.undo = [];
         this.redo = [];
-        this.fontSize = [];
         this.maxUndo = 15;
-    }
-    setFontSize = (size) => {
-        this.fontSize.push(size)
     }
     setSeleted = (selectedObj) => {
         if (!selectedObj) { return }
         this.selected = { ...selectedObj };
 
-        if (selectedObj.type === 'i-text' || selectedObj.type === 'textbox') {
+        if (selectedObj.type === 'i-text' || selectedObj.type === 'textbox' || selectedObj.type === 'text') {
             selectedObj.clone((cloned) => {
                 this.cloned = cloned
             }, ['uid'])
@@ -27,7 +23,7 @@ class UndoRedo {
         return this.selected
     }
 
-    onCanvasChange = ({ activeEl, eventType }) => {
+    onCanvasChange = ({ activeEl, eventType, fabricRef }) => {
 
         // check if we have the record of the prev state
         let toPushToUndo = {};
@@ -87,7 +83,9 @@ class UndoRedo {
                             top: i.top,
                             left: i.left,
                             scaleY: i.scaleY || 1,
-                            angle: i.angle || 1,
+                            angle: i.angle || 0,
+                            skewX: i.skewX || 0,
+                            skewY: i.skewY || 0,
                             width: i.width,
                         })
                     ),
@@ -96,9 +94,11 @@ class UndoRedo {
                         scaleX: i.scaleX || 1,
                         top: i.top,
                         left: i.left,
-                        scaleY: i.scaleY || 1,
-                        angle: i.angle || 1,
+                        scaleY: i.scaleY || 0,
+                        angle: i.angle || 0,
                         width: i.width,
+                        skewX: i.skewX || 0,
+                        skewY: i.skewY || 0,
                     }))
                 }
 
@@ -111,6 +111,7 @@ class UndoRedo {
                     state: this.cloned,
                     aheadState: activeEl,
                 }
+                this.cloned = this.generateSelectionClone(fabricRef, activeEl)
                 break;
             case "object:styled":
                 toPushToUndo = {
@@ -146,7 +147,7 @@ class UndoRedo {
                         scaleX: this.selected.scaleX || 1,
                         top: this.selected.top,
                         left: this.selected.left,
-                        angle: this.selected.angle || 1,
+                        angle: this.selected.angle || 0,
                         width: this.selected.width,
                     },
                     aheadState: {
@@ -154,12 +155,13 @@ class UndoRedo {
                         scaleX: activeEl.scaleX || 1,
                         top: activeEl.top,
                         left: activeEl.left,
-                        angle: activeEl.angle || 1,
+                        angle: activeEl.angle || 0,
                         width: activeEl.width,
                     }
                 }
 
                 if (isEqual(toPushToUndo.state, toPushToUndo.aheadState)) return
+                if (activeEl.type === 'activeSelection') this.cloned = this.generateSelectionClone(fabricRef, activeEl)
                 break;
         }
         this.redo = []
@@ -171,7 +173,6 @@ class UndoRedo {
     }
 
     doUndo = (fabricRef) => {
-        // this._isUndoingOrRedoing = true;
         let obj;
         if (!this.undo.length) return;
         const lastUndoState = this.undo.pop()
@@ -180,15 +181,16 @@ class UndoRedo {
                 return o.uid === lastUndoState.uid;
             });
         }
-        const activeEl = fabricRef.current.getActiveObject()
+        let activeEl = fabricRef.current.getActiveObject()
         if (activeEl && activeEl.type === 'activeSelection') fabricRef.current.discardActiveObject()
-        //push to redo 
+
         this.redo.push(lastUndoState)
 
         switch (lastUndoState.eventType) {
             case "object:modified":
                 fabricRef.current.remove(obj)
                 fabricRef.current.add(lastUndoState.state)
+                if (activeEl) activeEl = lastUndoState.state
                 break;
             case "object:deleted":
                 fabricRef.current.add(lastUndoState.state)
@@ -211,18 +213,23 @@ class UndoRedo {
                 toRemove.forEach((i) => {
                     fabricRef.current.remove(i)
                 })
-                // lastUndoState.state.set({
-                //     left: lastUndoState.state.left,
-                //     top: lastUndoState.state.top,
-                //     evented: true,
-                // });
                 lastUndoState.state.canvas = fabricRef.current
+                //lastUndoState was selected when added
+                // so we need to select it before adding objects
+                fabricRef.current.setActiveObject(lastUndoState.state)
                 lastUndoState.state.forEachObject(function (obj) {
                     fabricRef.current.add(obj);
-                    obj.setCoords()
                 })
                 lastUndoState.state.setCoords();
-                fabricRef.current.setActiveObject(lastUndoState.state);
+
+                if (activeEl && activeEl.type === 'activeSelection') {
+                    const activeUid = activeEl.getObjects().map(i => i.uid)
+                    if (isEqual(lastUndoState.uid.sort(), activeUid.sort())) {
+                        activeEl = lastUndoState.state;
+                    }
+                } else {
+                    fabricRef.current.discardActiveObject()
+                }
                 break;
             case "group:scaled":
             case "group:rotated":
@@ -239,19 +246,18 @@ class UndoRedo {
                 })
                 break
             default:
-                console.log('uy')
                 if (!obj) { return }
                 console.log('setting property', obj)
                 obj.set(lastUndoState.state)
                 obj.setCoords();
         }
+
         //group:modified is tricky
         if (activeEl && activeEl.type === 'activeSelection' && lastUndoState.eventType !== "group:modified") {
             console.log('THIS IS RUNNING')
-            // fabricRef.current.discardActiveObject()
             const newSelection = new fabric.ActiveSelection(activeEl.getObjects(), { canvas: fabricRef.current });
             fabricRef.current.setActiveObject(newSelection);
-        } else if (activeEl && lastUndoState.eventType !== "group:modified") {
+        } else if (activeEl) {
             activeEl.canvas = fabricRef.current
             fabricRef.current.setActiveObject(activeEl)
         }
@@ -271,8 +277,9 @@ class UndoRedo {
                 return o.uid === lastRedoState.uid;
             });
         }
-        const activeEl = fabricRef.current.getActiveObject()
+        let activeEl = fabricRef.current.getActiveObject()
         if (activeEl && activeEl.type === 'activeSelection') fabricRef.current.discardActiveObject()
+
         //push to redo 
         this.undo.push(lastRedoState)
 
@@ -281,6 +288,7 @@ class UndoRedo {
                 fabricRef.current.remove(obj)
                 lastRedoState.state.setCoords()
                 fabricRef.current.add(lastRedoState.aheadState)
+                if (activeEl) activeEl = lastRedoState.aheadState
                 break;
             case "object:deleted":
                 fabricRef.current.remove(obj)
@@ -298,7 +306,16 @@ class UndoRedo {
                 lastRedoState.aheadState.forEachObject(function (obj) {
                     fabricRef.current.add(obj);
                 })
-                lastRedoState.state.setCoords();
+                lastRedoState.aheadState.setCoords();
+
+                if (activeEl && activeEl.type === 'activeSelection') {
+                    const activeUid = activeEl.getObjects().map(i => i.uid)
+                    if (isEqual(lastRedoState.uid.sort(), activeUid.sort())) {
+                        activeEl = lastRedoState.aheadState;
+                    }
+                } else {
+                    fabricRef.current.discardActiveObject()
+                }
                 break;
             case "group:deleted":
                 lastRedoState.state.forEachObject(function (obj) {
@@ -320,6 +337,7 @@ class UndoRedo {
                         })
                     }
                 })
+
                 break
             default:
                 if (!obj) { return }
@@ -328,18 +346,15 @@ class UndoRedo {
 
         }
         //group:modified is tricky
-        if (activeEl && activeEl.type === 'activeSelection' && lastRedoState.eventType !== "group:modified") {
-            console.log('THIS IS RUNNING')
-            // fabricRef.current.discardActiveObject()
+        if (activeEl && activeEl.type === 'activeSelection') {
             const newSelection = new fabric.ActiveSelection(activeEl.getObjects(), { canvas: fabricRef.current });
             fabricRef.current.setActiveObject(newSelection);
-        } else if (activeEl && lastRedoState.eventType !== "group:modified") {
+        } else if (activeEl) {
             activeEl.canvas = fabricRef.current
             fabricRef.current.setActiveObject(activeEl)
         }
         fabricRef.current.renderAll()
         //this make sure the latest position is reflected
-
         if (lastRedoState.uid) this.setSeleted(obj)
     }
 

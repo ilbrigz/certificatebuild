@@ -91,6 +91,7 @@ const useControlHandlers = () => {
           opacity: 1,
           lockRotation: true,
           cornerSize: 12,
+          uid: makeid(6)
         });
 
         var cw = fabricRef.current.width;
@@ -105,6 +106,7 @@ const useControlHandlers = () => {
         }
         fabricRef.current.add(imageinstance);
         fabricRef.current.centerObject(imageinstance);
+        RU.onCanvasChange({ activeEl: imageinstance, eventType: 'object:added' })
       };
     };
     // with image resize
@@ -227,7 +229,6 @@ const useControlHandlers = () => {
       fabricRef.current.requestRenderAll();
     }
   };
-
   const onSetFontSize = (e) => {
     const direction = parseInt(e.target.value) > parseInt(e.target.dataset.prevValue) ? 'up' : 'down'
     //manual input?
@@ -265,8 +266,18 @@ const useControlHandlers = () => {
         i.set({ fontSize: typed ? parseInt(e.target.value) : direction === 'up' ? parseInt(i.fontSize) + 1 : parseInt(i.fontSize) - 1 })
         fabricRef.current.requestRenderAll();
       });
+      //disable events while debouncing
+      fabricRef.current.forEachObject(object => {
+        object.selectable = false;
+        object.evented = false;
+      });
       debouncedEnd(() => {
-        RU.onCanvasChange({ activeEl, eventType: 'group:modified' })
+        RU.onCanvasChange({ activeEl, eventType: 'group:modified', fabricRef })
+        // debounce is complete
+        fabricRef.current.forEachObject(object => {
+          object.selectable = true;
+          object.evented = true;
+        });
       })
       setSelectedObject(activeEl.toObject());
       e.target.dataset.prevValue = e.target.value;
@@ -308,17 +319,17 @@ const useControlHandlers = () => {
     if (activeEl && activeEl.type === 'activeSelection') {
       activeEl.clone((cloned) => {
         RU.cloned = cloned;
-        RU.onCanvasChange({ activeEl, eventType: 'group:modified' })
+        RU.onCanvasChange({ activeEl, eventType: 'group:modified', fabricRef })
       }, ['uid'])
       activeEl._objects.forEach((i) => {
         if (i.type !== 'image') i.set(property, value);
       });
       fabricRef.current.requestRenderAll();
+      RU.cloned = RU.generateSelectionClone(fabricRef, activeEl);
       setSelectedObject(activeEl.toObject());
       return;
     }
     if (activeEl.setSelectionStyles && activeEl.isEditing) {
-      console.log(activeEl.isEditing);
       activeEl.setSelectionStyles({
         [property]: value,
       });
@@ -383,7 +394,8 @@ const useControlHandlers = () => {
     console.log(selectedObject)
     let activeEl = fabricRef.current.getActiveObject();
     if (activeEl) {
-      console.log(activeEl.toSVG())
+      console.log(activeEl)
+      // console.log(activeEl.toSVG())
       return;
     }
     console.log(fabricRef.current.toJSON(['uid']));

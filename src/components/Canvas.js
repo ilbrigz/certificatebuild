@@ -6,7 +6,7 @@ import { Paper, makeStyles } from '@material-ui/core';
 
 import { fabricOptionsOveride } from '../config/fabric.config';
 import data from '../data/fabric';
-import { addUndoRedo, addCanvasLister, eventCleanUp } from '../modules/fabric.module';
+import { addCanvasLister, eventCleanUp, addUndoToEvents } from '../modules/fabric.module';
 import initAligningGuidelines from '../modules/aligningLines'
 const useStyles = makeStyles((theme) => ({
   canvasContainer: {
@@ -130,10 +130,11 @@ const Canvas = () => {
       fabricRef.current.renderAll();
     });
     //add all canvas listeners
-    addCanvasLister({ selectedObject, setSelectedObject, fabricRef })
     // fabricRef.current.setHeight(595);
     // fabricRef.current.setWidth(842);
+    addCanvasLister({ selectedObject, setSelectedObject, fabricRef })
     initAligningGuidelines(fabricRef.current)
+    addUndoToEvents({ fabricRef })
 
     fabricRef.current.renderAll();
     fabric.Object.prototype.set(fabricOptionsOveride);
